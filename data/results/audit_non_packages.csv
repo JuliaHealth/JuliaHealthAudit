@@ -1,0 +1,11 @@
+repo_name,github_repo_url,is_archived,has_license,pushed_at,stars,contributors_count,open_issues_count,closed_issues_count,issue_resolution_rate,open_prs_count,closed_prs_count,pr_resolution_rate,has_ci_workflow
+JuliaHealthWebsiteOld,https://github.com/JuliaHealth/JuliaHealthWebsiteOld,false,false,2025-05-16T20:11:29Z,15,6,13,5,27.8,2,111,98.2,true
+MedPipe3DTutorial,https://github.com/JuliaHealth/MedPipe3DTutorial,false,false,2024-03-12T18:16:23Z,9,1,0,2,100.0,0,2,100.0,false
+JuliaHealthLLM,https://github.com/JuliaHealth/JuliaHealthLLM,false,true,2025-12-19T01:14:33Z,4,2,3,0,0.0,32,4,11.1,true
+OMOPCDMPredictor,https://github.com/JuliaHealth/OMOPCDMPredictor,false,true,2023-03-20T00:22:57Z,4,1,0,0,0.0,0,0,0.0,false
+ObservationalHealthSubecosystemPaper,https://github.com/JuliaHealth/ObservationalHealthSubecosystemPaper,false,false,2024-01-17T06:07:31Z,2,1,0,0,0.0,0,0,0.0,false
+EpiJ,https://github.com/JuliaHealth/EpiJ,false,true,2022-01-27T21:41:16Z,2,1,0,0,0.0,0,0,0.0,true
+JuliaHealthEcosystemPaper,https://github.com/JuliaHealth/JuliaHealthEcosystemPaper,false,false,2025-11-27T03:40:29Z,1,1,0,0,0.0,0,0,0.0,false
+OMOPCDMMetrics,https://github.com/JuliaHealth/OMOPCDMMetrics,false,true,2024-08-22T02:01:27Z,1,1,0,0,0.0,5,0,0.0,true
+JuliaHealthAudit,https://github.com/JuliaHealth/JuliaHealthAudit,false,true,2026-01-10T04:10:47Z,0,1,0,0,0.0,0,0,0.0,false
+JuliaHealthZoo,https://github.com/JuliaHealth/JuliaHealthZoo,false,false,2025-09-04T16:21:29Z,0,0,3,0,0.0,0,0,0.0,false
