@@ -15,7 +15,7 @@ all_np_stars |>
     title="All Non-Packages by GitHub Stars",
     tooltip=[{field=:repo_name, type="nominal"}, {field=:stars, type="quantitative"}]
 ) |>
-save("data/visualizations/21_nonpackages_all_stars.html")
+save("data/visualizations/18_nonpackages_all_stars.png")
 
 # 2. ALL NON-PACKAGES BY CONTRIBUTORS (sorted highest on top)
 println("[2/15] Generating: All Non-Packages by Contributors")
@@ -31,7 +31,7 @@ all_np_contrib |>
     title="All Non-Packages by Contributors",
     tooltip=[{field=:repo_name, type="nominal"}, {field=:contributors_count, type="quantitative"}]
 ) |>
-save("data/visualizations/22_nonpackages_all_contributors.html")
+save("data/visualizations/19_nonpackages_all_contributors.png")
 
 # 3. ARCHIVE STATUS (Non-Packages)
 println("[3/15] Generating: Non-Packages Archive Status")
@@ -52,7 +52,7 @@ np_archive |>
     title="Non-Packages Archive Status",
     tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/23_nonpackages_archive_status.html")
+save("data/visualizations/20_nonpackages_archive_status.png")
 
 # 4. CI/CD ADOPTION (Non-Packages)
 println("[4/15] Generating: Non-Packages CI/CD Adoption")
@@ -73,7 +73,7 @@ np_ci |>
     title="Non-Packages CI/CD Adoption",
     tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/24_nonpackages_ci_adoption.html")
+save("data/visualizations/21_nonpackages_ci_adoption.png")
 
 # 5. LICENSE STATUS (Non-Packages)
 println("[5/15] Generating: Non-Packages License Status")
@@ -94,7 +94,7 @@ np_license |>
     title="Non-Packages License Adoption",
     tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/25_nonpackages_license_status.html")
+save("data/visualizations/22_nonpackages_license_status.png")
 
 # 6. ISSUE RESOLUTION RATES (Non-Packages)
 println("[6/12] Generating: Non-Packages Issue Resolution Rates")
@@ -110,7 +110,7 @@ np_issues |>
     title="Non-Packages: Issue Resolution Rates (%)",
     tooltip=[{field=:repo_name, type="nominal"}, {field=:issue_resolution_rate, type="quantitative"}]
 ) |>
-save("data/visualizations/28_nonpackages_issue_resolution.html")
+save("data/visualizations/23_nonpackages_issue_resolution.png")
 
 # 7. PR RESOLUTION RATES (Non-Packages)
 println("[7/12] Generating: Non-Packages PR Resolution Rates")
@@ -126,7 +126,7 @@ np_prs |>
     title="Non-Packages: PR Resolution Rates (%)",
     tooltip=[{field=:repo_name, type="nominal"}, {field=:pr_resolution_rate, type="quantitative"}]
 ) |>
-save("data/visualizations/29_nonpackages_pr_resolution.html")
+save("data/visualizations/24_nonpackages_pr_resolution.png")
 
 # 8. OPEN ISSUES vs CLOSED ISSUES (Non-Packages)
 println("[8/12] Generating: Non-Packages Open vs Closed Issues")
@@ -149,7 +149,7 @@ np_issues_long |>
     title="Non-Packages: Open vs Closed Issues",
     tooltip=[{field=:repo_name, type="nominal"}, {field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/30_nonpackages_issues_comparison.html")
+save("data/visualizations/25_nonpackages_issues_comparison.png")
 
 # 9. OPEN PRS vs CLOSED PRS (Non-Packages)
 println("[9/12] Generating: Non-Packages Open vs Closed PRs")
@@ -172,7 +172,7 @@ np_prs_long |>
     title="Non-Packages: Open vs Closed PRs",
     tooltip=[{field=:repo_name, type="nominal"}, {field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/31_nonpackages_prs_comparison.html")
+save("data/visualizations/26_nonpackages_prs_comparison.png")
 
 # COMPARISON VISUALIZATIONS
 println("[10/12] Generating: Packages vs Non-Packages Comparison (Stars)")
@@ -195,7 +195,7 @@ comparison_avg |>
     height=250,
     title="Packages vs Non-Packages: Average Stars"
 ) |>
-save("data/visualizations/33_comparison_avg_stars.html")
+save("data/visualizations/27_comparison_avg_stars.png")
 
 # 11. COMPARISON - Contributors
 println("[11/12] Generating: Packages vs Non-Packages Comparison (Contributors)")
@@ -213,7 +213,7 @@ comparison_contrib |>
     height=250,
     title="Packages vs Non-Packages: Average Contributors"
 ) |>
-save("data/visualizations/34_comparison_avg_contributors.html")
+save("data/visualizations/28_comparison_avg_contributors.png")
 
 # 12. COMPARISON - Resolution Rates
 println("[12/12] Generating: Packages vs Non-Packages Comparison (Resolutions)")
@@ -236,6 +236,6 @@ comparison_resolution |>
     height=300,
     title="Resolution Rates: Packages vs Non-Packages"
 ) |>
-save("data/visualizations/35_comparison_resolution_rates.html")
+save("data/visualizations/29_comparison_resolution_rates.png")
 
 println("\nAll 12 non-package & comparison visualizations generated!")

@@ -42,7 +42,8 @@ p1 = compliance_long |>
     height={step=14},
     title="Standards Compliance: All Packages"
 )
-p1 |> save("data/visualizations/01_packages_standards_compliance.html")
+p1 |> save("data/visualizations/01_packages_standards_compliance.png")
+p1 |> save("data/visualizations/01_packages_standards_compliance.png")
 
 # 1b. STANDARDS COMPLIANCE SUMMARY (percent of packages meeting each standard)
 summary_rows = DataFrame(standard=String[], percent=Float64[], count=Int[])
@@ -61,7 +62,7 @@ compliance_summary |>
     title="Standards Compliance: Percentage of Packages",
     tooltip=[{field=:standard, type="nominal"}, {field=:percent, type="quantitative", format=".1f"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/02a_packages_standards_percentages.html")
+save("data/visualizations/02_packages_standards_percentages.png")
 
 # 2. STYLE GUIDE DISTRIBUTION
 println("[2/20] Generating: Style Guide Distribution Pie Chart")
@@ -79,7 +80,7 @@ p2 = style_counts |>
     title="Code Style Guide Adoption",
     tooltip=[{field=:style_guide_type, type="nominal"}, {field=:count, type="quantitative"}]
 )
-p2 |> save("data/visualizations/02_packages_style_guide_distribution.html")
+p2 |> save("data/visualizations/03_packages_style_guide_distribution.png")
 
 # 3. TOP 15 BY STARS
 println("[3/20] Generating: Top 15 Packages by Stars")
@@ -94,7 +95,7 @@ top_stars |>
     title="Top 15 Packages by GitHub Stars",
     tooltip=[{field=:package_name, type="nominal"}, {field=:stars, type="quantitative"}]
 ) |>
-save("data/visualizations/03_packages_top15_stars.html")
+save("data/visualizations/04_packages_top15_stars.png")
 
 # 4. TOP 15 BY CONTRIBUTORS
 println("[4/20] Generating: Top 15 Packages by Contributors")
@@ -109,7 +110,7 @@ top_contrib |>
     title="Top 15 Packages by Contributors",
     tooltip=[{field=:package_name, type="nominal"}, {field=:contributors_count, type="quantitative"}]
 ) |>
-save("data/visualizations/04_packages_top15_contributors.html")
+save("data/visualizations/05_packages_top15_contributors.png")
 
 # 5. TOP 15 BY RELEASES
 println("[5/20] Generating: Top 15 Packages by Release Count")
@@ -124,7 +125,7 @@ top_releases |>
     title="Top 15 Packages by Release Count",
     tooltip=[{field=:package_name, type="nominal"}, {field=:releases_count, type="quantitative"}]
 ) |>
-save("data/visualizations/05_packages_top15_releases.html")
+save("data/visualizations/06_packages_top15_releases.png")
 
 # 6. DOCUMENTATION ADOPTION (multiple metrics)
 println("[6/20] Generating: Documentation Adoption Comparison")
@@ -148,7 +149,7 @@ doc_metrics |>
     height=250,
     title="Documentation Standards Adoption (%)"
 ) |>
-save("data/visualizations/06_packages_documentation_adoption.html")
+save("data/visualizations/07_packages_documentation_adoption.png")
 
 # 7. CI/CD ADOPTION (arc chart for better visibility)
 println("[7/20] Generating: CI/CD Adoption Arc Chart")
@@ -169,7 +170,7 @@ ci_adoption |>
     title="CI/CD Workflow Adoption",
     tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/07_packages_ci_adoption.html")
+save("data/visualizations/08_packages_ci_adoption.png")
 
 # 8. REGISTRY ADOPTION (arc chart for better visibility)
 println("[8/20] Generating: Registry Adoption Distribution")
@@ -190,7 +191,7 @@ registry_adoption |>
     title="General Registry Adoption",
     tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/08_packages_registry_adoption.html")
+save("data/visualizations/09_packages_registry_adoption.png")
 
 # 9. STARS DISTRIBUTION (histogram)
 println("[9/17] Generating: Stars Distribution Histogram")
@@ -203,7 +204,7 @@ packages_df |>
     height=300,
     title="Distribution of GitHub Stars"
 ) |>
-save("data/visualizations/12_packages_stars_distribution.html")
+save("data/visualizations/10_packages_stars_distribution.png")
 
 # 10. README QUALITY (line count distribution)
 println("[10/17] Generating: README Quality (Line Count Distribution)")
@@ -216,7 +217,7 @@ packages_df |>
     height=300,
     title="Distribution of README Line Counts"
 ) |>
-save("data/visualizations/13_packages_readme_quality.html")
+save("data/visualizations/11_packages_readme_quality.png")
 
 # 11. CONTRIBUTORS DISTRIBUTION
 println("[11/17] Generating: Contributors Distribution Histogram")
@@ -229,7 +230,7 @@ packages_df |>
     height=300,
     title="Distribution of Contributors"
 ) |>
-save("data/visualizations/11_packages_contributors_distribution.html")
+save("data/visualizations/12_packages_contributors_distribution.png")
 
 # 12. RELEASES DISTRIBUTION
 println("[12/17] Generating: Releases Distribution Histogram")
@@ -242,7 +243,7 @@ packages_df |>
     height=300,
     title="Distribution of Release Counts"
 ) |>
-save("data/visualizations/12_packages_releases_distribution.html")
+save("data/visualizations/13_packages_releases_distribution.png")
 
 # 13. ARCHIVE STATUS (arc chart for better visibility)
 println("[13/17] Generating: Archive Status Distribution")
@@ -263,7 +264,7 @@ archive_status |>
     title="Package Archive Status",
     tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/13_packages_archive_status.html")
+save("data/visualizations/14_packages_archive_status.png")
 
 # 14. FORK STATUS (arc chart for better visibility)
 println("[14/17] Generating: Fork Status Distribution")
@@ -284,7 +285,7 @@ fork_status |>
     title="Package Fork Status",
     tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/14_packages_fork_status.html")
+save("data/visualizations/15_packages_fork_status.png")
 
 # 15. OPEN ISSUES vs CLOSED ISSUES (Top 15)
 println("[15/17] Generating: Open vs Closed Issues Comparison")
@@ -307,7 +308,7 @@ top_issues_long |>
     title="Top 15 Packages: Open vs Closed Issues",
     tooltip=[{field=:package_name, type="nominal"}, {field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/15_packages_issues_comparison.html")
+save("data/visualizations/16_packages_issues_comparison.png")
 
 # 16. OPEN PRS vs CLOSED PRS (Top 15)
 println("[16/17] Generating: Open vs Closed PRs Comparison")
@@ -330,4 +331,4 @@ top_prs_long |>
     title="Top 15 Packages: Open vs Closed PRs",
     tooltip=[{field=:package_name, type="nominal"}, {field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/16_packages_prs_comparison.html")
+save("data/visualizations/17_packages_prs_comparison.png")

@@ -1,97 +1,93 @@
 # JuliaHealth Ecosystem Audit Results
 
-**Last Updated:** {{LAST_UPDATED}}  
-**Coverage:** {{TOTAL_REPOS}} repositories ({{PACKAGE_COUNT}} packages, {{NONPACKAGE_COUNT}} non-packages)
-
-
 ##  Package Audit Visualizations
 
 ### Standards & Quality
 
-<iframe src="data/visualizations/01_packages_standards_compliance.html" width="100%" height="750"></iframe>
+![Standards Compliance](data/visualizations/01_packages_standards_compliance.png)
 
-<iframe src="data/visualizations/02a_packages_standards_percentages.html" width="100%" height="450"></iframe>
+![Standards Percentages](data/visualizations/02_packages_standards_percentages.png)
 
-<iframe src="data/visualizations/02_packages_style_guide_distribution.html" width="100%" height="380"></iframe>
+![Style Guide Distribution](data/visualizations/03_packages_style_guide_distribution.png)
 
 ### Community Metrics
 
-<iframe src="data/visualizations/03_packages_top15_stars.html" width="100%" height="450"></iframe>
+![Top 15 by Stars](data/visualizations/04_packages_top15_stars.png)
 
-<iframe src="data/visualizations/04_packages_top15_contributors.html" width="100%" height="450"></iframe>
+![Top 15 by Contributors](data/visualizations/05_packages_top15_contributors.png)
 
-<iframe src="data/visualizations/05_packages_top15_releases.html" width="100%" height="450"></iframe>
+![Top 15 by Releases](data/visualizations/06_packages_top15_releases.png)
 
 ### Documentation
 
-<iframe src="data/visualizations/06_packages_documentation_adoption.html" width="100%" height="450"></iframe>
+![Documentation Adoption](data/visualizations/07_packages_documentation_adoption.png)
 
 ### Infrastructure
 
-<iframe src="data/visualizations/07_packages_ci_adoption.html" width="100%" height="360"></iframe>
+![CI/CD Adoption](data/visualizations/08_packages_ci_adoption.png)
 
-<iframe src="data/visualizations/08_packages_registry_adoption.html" width="100%" height="360"></iframe>
+![Registry Adoption](data/visualizations/09_packages_registry_adoption.png)
 
 ### Distribution Patterns
 
-<iframe src="data/visualizations/12_packages_stars_distribution.html" width="100%" height="420"></iframe>
+![Stars Distribution](data/visualizations/10_packages_stars_distribution.png)
 
-<iframe src="data/visualizations/13_packages_readme_quality.html" width="100%" height="420"></iframe>
+![README Quality](data/visualizations/11_packages_readme_quality.png)
 
-<iframe src="data/visualizations/14_packages_contributors_distribution.html" width="100%" height="420"></iframe>
+![Contributors Distribution](data/visualizations/12_packages_contributors_distribution.png)
 
-<iframe src="data/visualizations/15_packages_releases_distribution.html" width="100%" height="420"></iframe>
+![Releases Distribution](data/visualizations/13_packages_releases_distribution.png)
 
 ### Project Status
 
-<iframe src="data/visualizations/16_packages_archive_status.html" width="100%" height="360"></iframe>
+![Archive Status](data/visualizations/14_packages_archive_status.png)
 
-<iframe src="data/visualizations/17_packages_fork_status.html" width="100%" height="360"></iframe>
+![Fork Status](data/visualizations/15_packages_fork_status.png)
 
 ### Community Engagement
 
-<iframe src="data/visualizations/19_packages_issues_comparison.html" width="100%" height="620"></iframe>
+![Issues Comparison](data/visualizations/16_packages_issues_comparison.png)
 
-<iframe src="data/visualizations/20_packages_prs_comparison.html" width="100%" height="620"></iframe>
+![PRs Comparison](data/visualizations/17_packages_prs_comparison.png)
 
 
 ##  Non-Package Audit Visualizations
 
 ### Community Resources
 
-<iframe src="data/visualizations/21_nonpackages_all_stars.html" width="100%" height="450"></iframe>
+![All Non-Packages by Stars](data/visualizations/18_nonpackages_all_stars.png)
 
-<iframe src="data/visualizations/22_nonpackages_all_contributors.html" width="100%" height="450"></iframe>
+![All Non-Packages by Contributors](data/visualizations/19_nonpackages_all_contributors.png)
 
 ### Resource Status
 
-<iframe src="data/visualizations/23_nonpackages_archive_status.html" width="100%" height="360"></iframe>
+![Archive Status](data/visualizations/20_nonpackages_archive_status.png)
 
-<iframe src="data/visualizations/24_nonpackages_ci_adoption.html" width="100%" height="360"></iframe>
+![CI/CD Adoption](data/visualizations/21_nonpackages_ci_adoption.png)
 
-<iframe src="data/visualizations/25_nonpackages_license_status.html" width="100%" height="360"></iframe>
+![License Status](data/visualizations/22_nonpackages_license_status.png)
 
 ### Support Quality
 
-<iframe src="data/visualizations/28_nonpackages_issue_resolution.html" width="100%" height="450"></iframe>
+![Issue Resolution Rates](data/visualizations/23_nonpackages_issue_resolution.png)
 
-<iframe src="data/visualizations/29_nonpackages_pr_resolution.html" width="100%" height="450"></iframe>
+![PR Resolution Rates](data/visualizations/24_nonpackages_pr_resolution.png)
 
 ### Activity Status
 
-<iframe src="data/visualizations/30_nonpackages_issues_comparison.html" width="100%" height="540"></iframe>
+![Issues Comparison](data/visualizations/25_nonpackages_issues_comparison.png)
 
-<iframe src="data/visualizations/31_nonpackages_prs_comparison.html" width="100%" height="540"></iframe>
+![PRs Comparison](data/visualizations/26_nonpackages_prs_comparison.png)
 
 ##  Ecosystem Comparison
 
 ### Package vs Non-Package Analysis
 
-<iframe src="data/visualizations/33_comparison_avg_stars.html" width="100%" height="500"></iframe>
+![Average Stars Comparison](data/visualizations/27_comparison_avg_stars.png)
 
-<iframe src="data/visualizations/34_comparison_avg_contributors.html" width="100%" height="500"></iframe>
+![Average Contributors Comparison](data/visualizations/28_comparison_avg_contributors.png)
 
-<iframe src="data/visualizations/35_comparison_resolution_rates.html" width="100%" height="500"></iframe>
+![Resolution Rates Comparison](data/visualizations/29_comparison_resolution_rates.png)
 
 **Report Generated:** Auto-generated by \scripts/visualizations/visualize.jl\  
 **Data Source:** GitHub API audit of JuliaHealth repositories

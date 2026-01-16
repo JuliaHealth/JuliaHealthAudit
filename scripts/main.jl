@@ -48,10 +48,15 @@ function main()
     println("\nPhase 3: Auditing Non-Packages\n")
     include("audit/03_audit_non_packages.jl")
 
+    println("\nPhase 4: Generating Visualizations\n")
+    include("visualizations/visualize.jl")
+
     println("\nAudit Complete!")
     println("Results saved to:")
     println("- data/results/audit_packages.csv")
-    println("- data/results/audit_non_packages.csv\n")
+    println("- data/results/audit_non_packages.csv")
+    println("- data/visualizations/*.png")
+    println("- RESULTS.md\n")
 end
 
 main()
