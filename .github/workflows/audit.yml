@@ -6,6 +6,8 @@ on:
 jobs:
   audit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -16,6 +18,12 @@ jobs:
         with:
           version: "1.11"
 
+      - name: Cache Julia packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.julia
+          key: ${{ runner.os }}-julia-${{ hashFiles('**/Project.toml') }}
+
       - name: Install dependencies
         run: julia --project=. -e 'using Pkg; Pkg.instantiate()'
 
@@ -24,3 +32,19 @@ jobs:
 
       - name: Run audit pipeline
         run: julia --project=. scripts/main.jl
+
+      - name: Commit and push results
+        run: |
+          # Configure git identity
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          # Stage audit output files
+          git add data/results/*.csv
+          git add data/visualizations/*.png
+
+          # Commit and push only if there are changes
+          if ! git diff --quiet || ! git diff --staged --quiet; then
+            git commit -m "Update audit results [skip ci]"
+            git push
+          fi
