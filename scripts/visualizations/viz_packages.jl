@@ -3,10 +3,17 @@
 
 using DataFrames
 using VegaLite
-using Statistics
+using Dates
 
-# 1. STANDARDS COMPLIANCE - Which packages have which features
-println("\n[1/20] Generating: Standards Compliance Heatmap")
+# Progress tracking
+viz_counter = Ref(0)
+function print_progress(name::String)
+    viz_counter[] += 1
+    println("[$(viz_counter[])] Generating: $name")
+end
+
+# STANDARDS COMPLIANCE - Which packages have which features
+print_progress("Standards Compliance Heatmap")
 compliance_cols = [
     :has_src_dir,
     :has_test_dir,
@@ -42,14 +49,13 @@ p1 = compliance_long |>
     height={step=14},
     title="Standards Compliance: All Packages"
 )
-p1 |> save("data/visualizations/01_packages_standards_compliance.png")
-p1 |> save("data/visualizations/01_packages_standards_compliance.png")
+p1 |> save("data/visualizations/packages_standards_compliance.png")
 
-# 1b. STANDARDS COMPLIANCE SUMMARY (percent of packages meeting each standard)
+# STANDARDS COMPLIANCE SUMMARY (percent of packages meeting each standard)
 summary_rows = DataFrame(standard=String[], percent=Float64[], count=Int[])
 for col in compliance_cols
     values = packages_df[!, col]
-    push!(summary_rows, (standard=String(col), percent=100 * (sum(values) / length(values)), count=sum(values)))
+    push!(summary_rows, (standard=String(col), percent=100 * sum(values) / length(values), count=sum(values)))
 end
 compliance_summary = sort(summary_rows, :percent, rev=true)
 compliance_summary |>
@@ -62,28 +68,31 @@ compliance_summary |>
     title="Standards Compliance: Percentage of Packages",
     tooltip=[{field=:standard, type="nominal"}, {field=:percent, type="quantitative", format=".1f"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/02_packages_standards_percentages.png")
+save("data/visualizations/packages_standards_percentages.png")
 
-# 2. STYLE GUIDE DISTRIBUTION
-println("[2/20] Generating: Style Guide Distribution Pie Chart")
+# STYLE GUIDE DISTRIBUTION
+print_progress("Style Guide Distribution Pie Chart")
 style_counts = combine(
     groupby(packages_df, :style_guide_type),
     nrow => :count
 )
+style_counts.percent = round.(100 .* style_counts.count ./ sum(style_counts.count); digits=1)
+style_counts.label = style_counts.style_guide_type .* " (" .* string.(style_counts.percent) .* "%)"
+
 p2 = style_counts |>
 @vlplot(
     :arc,
     theta=:count,
-    color="style_guide_type:n",
+    color={field=:label, type="nominal"},
     width=350,
     height=350,
     title="Code Style Guide Adoption",
-    tooltip=[{field=:style_guide_type, type="nominal"}, {field=:count, type="quantitative"}]
+    tooltip=[{field=:style_guide_type, type="nominal"}, {field=:count, type="quantitative"}, {field=:percent, type="quantitative"}]
 )
-p2 |> save("data/visualizations/03_packages_style_guide_distribution.png")
+p2 |> save("data/visualizations/packages_style_guide_distribution.png")
 
-# 3. TOP 15 BY STARS
-println("[3/20] Generating: Top 15 Packages by Stars")
+# TOP 15 BY STARS
+print_progress("Top 15 Packages by Stars")
 top_stars = sort(packages_df, :stars, rev=true)[1:15, [:package_name, :stars]]
 top_stars |>
 @vlplot(
@@ -95,10 +104,10 @@ top_stars |>
     title="Top 15 Packages by GitHub Stars",
     tooltip=[{field=:package_name, type="nominal"}, {field=:stars, type="quantitative"}]
 ) |>
-save("data/visualizations/04_packages_top15_stars.png")
+save("data/visualizations/packages_top15_stars.png")
 
-# 4. TOP 15 BY CONTRIBUTORS
-println("[4/20] Generating: Top 15 Packages by Contributors")
+# TOP 15 BY CONTRIBUTORS
+print_progress("Top 15 Packages by Contributors")
 top_contrib = sort(packages_df, :contributors_count, rev=true)[1:15, [:package_name, :contributors_count]]
 top_contrib |>
 @vlplot(
@@ -110,10 +119,10 @@ top_contrib |>
     title="Top 15 Packages by Contributors",
     tooltip=[{field=:package_name, type="nominal"}, {field=:contributors_count, type="quantitative"}]
 ) |>
-save("data/visualizations/05_packages_top15_contributors.png")
+save("data/visualizations/packages_top15_contributors.png")
 
-# 5. TOP 15 BY RELEASES
-println("[5/20] Generating: Top 15 Packages by Release Count")
+# TOP 15 BY RELEASES
+print_progress("Top 15 Packages by Release Count")
 top_releases = sort(packages_df, :releases_count, rev=true)[1:15, [:package_name, :releases_count]]
 top_releases |>
 @vlplot(
@@ -125,10 +134,10 @@ top_releases |>
     title="Top 15 Packages by Release Count",
     tooltip=[{field=:package_name, type="nominal"}, {field=:releases_count, type="quantitative"}]
 ) |>
-save("data/visualizations/06_packages_top15_releases.png")
+save("data/visualizations/packages_top_releases.png")
 
-# 6. DOCUMENTATION ADOPTION (multiple metrics)
-println("[6/20] Generating: Documentation Adoption Comparison")
+# DOCUMENTATION ADOPTION (multiple metrics)
+print_progress("Documentation Adoption Comparison")
 doc_metrics = DataFrame(
     metric=["Has Docs Dir", "Uses Documenter", "Has GH Pages", "README w/ Code", "Has Contributing"],
     adoption_rate=[
@@ -149,10 +158,10 @@ doc_metrics |>
     height=250,
     title="Documentation Standards Adoption (%)"
 ) |>
-save("data/visualizations/07_packages_documentation_adoption.png")
+save("data/visualizations/packages_docs_audit_coverage.png")
 
-# 7. CI/CD ADOPTION (arc chart for better visibility)
-println("[7/20] Generating: CI/CD Adoption Arc Chart")
+# CI/CD ADOPTION (arc chart for better visibility)
+print_progress("CI/CD Adoption Arc Chart")
 ci_adoption = DataFrame(
     status=["With CI/CD", "Without CI/CD"],
     count=[
@@ -160,20 +169,23 @@ ci_adoption = DataFrame(
         nrow(packages_df) - sum(packages_df.has_ci_workflow),
     ],
 )
+ci_adoption.percent = round.(100 .* ci_adoption.count ./ sum(ci_adoption.count); digits=1)
+ci_adoption.label = ci_adoption.status .* " (" .* string.(ci_adoption.percent) .* "%)"
+
 ci_adoption |>
 @vlplot(
     :arc,
     theta=:count,
-    color="status:n",
+    color={field=:label, type="nominal"},
     width=320,
     height=320,
     title="CI/CD Workflow Adoption",
-    tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}]
+    tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}, {field=:percent, type="quantitative"}]
 ) |>
-save("data/visualizations/08_packages_ci_adoption.png")
+save("data/visualizations/packages_ci_adoption.png")
 
-# 8. REGISTRY ADOPTION (arc chart for better visibility)
-println("[8/20] Generating: Registry Adoption Distribution")
+# REGISTRY ADOPTION (arc chart for better visibility)
+print_progress("Registry Adoption Distribution")
 registry_adoption = DataFrame(
     status=["In General Registry", "Not in Registry"],
     count=[
@@ -181,20 +193,23 @@ registry_adoption = DataFrame(
         nrow(packages_df) - sum(packages_df.in_general_registry),
     ],
 )
+registry_adoption.percent = round.(100 .* registry_adoption.count ./ sum(registry_adoption.count); digits=1)
+registry_adoption.label = registry_adoption.status .* " (" .* string.(registry_adoption.percent) .* "%)"
+
 registry_adoption |>
 @vlplot(
     :arc,
     theta=:count,
-    color="status:n",
+    color={field=:label, type="nominal"},
     width=320,
     height=320,
     title="General Registry Adoption",
-    tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}]
+    tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}, {field=:percent, type="quantitative"}]
 ) |>
-save("data/visualizations/09_packages_registry_adoption.png")
+save("data/visualizations/packages_registry_status.png")
 
-# 9. STARS DISTRIBUTION (histogram)
-println("[9/17] Generating: Stars Distribution Histogram")
+# STARS DISTRIBUTION (histogram)
+print_progress("Stars Distribution Histogram")
 packages_df |>
 @vlplot(
     :bar,
@@ -204,10 +219,10 @@ packages_df |>
     height=300,
     title="Distribution of GitHub Stars"
 ) |>
-save("data/visualizations/10_packages_stars_distribution.png")
+save("data/visualizations/packages_stars_distribution.png")
 
-# 10. README QUALITY (line count distribution)
-println("[10/17] Generating: README Quality (Line Count Distribution)")
+# README QUALITY (line count distribution)
+print_progress("README Quality (Line Count Distribution)")
 packages_df |>
 @vlplot(
     :bar,
@@ -217,10 +232,33 @@ packages_df |>
     height=300,
     title="Distribution of README Line Counts"
 ) |>
-save("data/visualizations/11_packages_readme_quality.png")
+save("data/visualizations/packages_readme_quality.png")
 
-# 11. CONTRIBUTORS DISTRIBUTION
-println("[11/17] Generating: Contributors Distribution Histogram")
+# GITHUB PAGES ADOPTION
+gh_pages = DataFrame(
+    status=["Has GitHub Pages", "No GitHub Pages"],
+    count=[
+        sum(packages_df.has_gh_pages),
+        nrow(packages_df) - sum(packages_df.has_gh_pages),
+    ],
+)
+gh_pages.percent = round.(100 .* gh_pages.count ./ sum(gh_pages.count); digits=1)
+gh_pages.label = gh_pages.status .* " (" .* string.(gh_pages.percent) .* "%)"
+
+gh_pages |>
+@vlplot(
+    :arc,
+    theta=:count,
+    color={field=:label, type="nominal"},
+    width=360,
+    height=320,
+    title="GitHub Pages Adoption",
+    tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}, {field=:percent, type="quantitative"}]
+) |>
+save("data/visualizations/packages_github_pages_adoption.png")
+
+# CONTRIBUTORS DISTRIBUTION
+print_progress("Contributors Distribution Histogram")
 packages_df |>
 @vlplot(
     :bar,
@@ -230,10 +268,10 @@ packages_df |>
     height=300,
     title="Distribution of Contributors"
 ) |>
-save("data/visualizations/12_packages_contributors_distribution.png")
+save("data/visualizations/packages_contributors_distribution.png")
 
-# 12. RELEASES DISTRIBUTION
-println("[12/17] Generating: Releases Distribution Histogram")
+# RELEASES DISTRIBUTION
+print_progress("Releases Distribution Histogram")
 packages_df |>
 @vlplot(
     :bar,
@@ -243,10 +281,10 @@ packages_df |>
     height=300,
     title="Distribution of Release Counts"
 ) |>
-save("data/visualizations/13_packages_releases_distribution.png")
+save("data/visualizations/packages_releases_distribution.png")
 
-# 13. ARCHIVE STATUS (arc chart for better visibility)
-println("[13/17] Generating: Archive Status Distribution")
+# ARCHIVE STATUS (arc chart for better visibility)
+print_progress("Archive Status Distribution")
 archive_status = DataFrame(
     status=["Active", "Archived"],
     count=[
@@ -254,20 +292,23 @@ archive_status = DataFrame(
         sum(packages_df.is_archived),
     ],
 )
+archive_status.percent = round.(100 .* archive_status.count ./ sum(archive_status.count); digits=1)
+archive_status.label = archive_status.status .* " (" .* string.(archive_status.percent) .* "%)"
+
 archive_status |>
 @vlplot(
     :arc,
     theta=:count,
-    color="status:n",
+    color={field=:label, type="nominal"},
     width=320,
     height=320,
     title="Package Archive Status",
-    tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}]
+    tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}, {field=:percent, type="quantitative"}]
 ) |>
-save("data/visualizations/14_packages_archive_status.png")
+save("data/visualizations/packages_archive_status.png")
 
-# 14. FORK STATUS (arc chart for better visibility)
-println("[14/17] Generating: Fork Status Distribution")
+# FORK STATUS (arc chart for better visibility)
+print_progress("Fork Status Distribution")
 fork_status = DataFrame(
     status=["Original", "Fork"],
     count=[
@@ -275,20 +316,23 @@ fork_status = DataFrame(
         sum(packages_df.is_fork),
     ],
 )
+fork_status.percent = round.(100 .* fork_status.count ./ sum(fork_status.count); digits=1)
+fork_status.label = fork_status.status .* " (" .* string.(fork_status.percent) .* "%)"
+
 fork_status |>
 @vlplot(
     :arc,
     theta=:count,
-    color="status:n",
+    color={field=:label, type="nominal"},
     width=320,
     height=320,
     title="Package Fork Status",
-    tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}]
+    tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}, {field=:percent, type="quantitative"}]
 ) |>
-save("data/visualizations/15_packages_fork_status.png")
+save("data/visualizations/packages_fork_status.png")
 
-# 15. OPEN ISSUES vs CLOSED ISSUES (Top 15)
-println("[15/17] Generating: Open vs Closed Issues Comparison")
+# OPEN ISSUES vs CLOSED ISSUES (Top 15)
+print_progress("Open vs Closed Issues Comparison")
 top_issues = sort(packages_df, :open_issues_count, rev=true)[1:15, [:package_name, :open_issues_count, :closed_issues_count]]
 
 # Manually reshape for issues
@@ -308,10 +352,10 @@ top_issues_long |>
     title="Top 15 Packages: Open vs Closed Issues",
     tooltip=[{field=:package_name, type="nominal"}, {field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/16_packages_issues_comparison.png")
+save("data/visualizations/packages_issues_comparison.png")
 
-# 16. OPEN PRS vs CLOSED PRS (Top 15)
-println("[16/17] Generating: Open vs Closed PRs Comparison")
+# OPEN PRS vs CLOSED PRS (Top 15)
+print_progress("Open vs Closed PRs Comparison")
 top_prs = sort(packages_df, :open_prs_count, rev=true)[1:15, [:package_name, :open_prs_count, :closed_prs_count]]
 
 # Manually reshape for PRs
@@ -331,4 +375,236 @@ top_prs_long |>
     title="Top 15 Packages: Open vs Closed PRs",
     tooltip=[{field=:package_name, type="nominal"}, {field=:status, type="nominal"}, {field=:count, type="quantitative"}]
 ) |>
-save("data/visualizations/17_packages_prs_comparison.png")
+save("data/visualizations/packages_prs_comparison.png")
+
+# DOCUMENTATION AUDIT: Coverage of documentation features
+docs_audit = DataFrame(
+    feature=["Has docs/", "Has gh-pages", "Uses Documenter", "Has CONTRIBUTING.md", "Has CODE_OF_CONDUCT.md"],
+    count=[
+        sum(packages_df.has_docs_dir),
+        sum(packages_df.has_gh_pages),
+        sum(packages_df.uses_documenter),
+        sum(packages_df.has_contributing_md),
+        sum(packages_df.has_code_of_conduct)
+    ]
+)
+docs_audit.percent = round.(100 .* docs_audit.count ./ nrow(packages_df); digits=1)
+
+docs_audit |>
+@vlplot(
+    :bar,
+    x={:percent, axis={title="Coverage (%)"}},
+    y={:feature, sort="-x"},
+    color={value="#1f77b4"},
+    width=600,
+    height=250,
+    title="Documentation Audit: Feature Coverage Across Packages",
+    tooltip=[{field=:feature, type="nominal"}, {field=:count, type="quantitative"}, {field=:percent, type="quantitative"}]
+) |>
+save("data/visualizations/packages_docs_audit_coverage.png")
+
+# CI/CD STATUS: GitHub Actions adoption and coverage
+ci_status = DataFrame(
+    feature=["Has CI Workflow", "Has Code Coverage", "Standard Repository Layout"],
+    count=[
+        sum(packages_df.has_ci_workflow),
+        sum(packages_df.has_code_coverage),
+        sum(packages_df.follows_standard_layout)
+    ]
+)
+ci_status.percent = round.(100 .* ci_status.count ./ nrow(packages_df); digits=1)
+
+ci_status |>
+@vlplot(
+    :bar,
+    x={:percent, axis={title="Adoption (%)"}},
+    y={:feature, sort="-x"},
+    color={value="#2ca02c"},
+    width=600,
+    height=220,
+    title="CI/CD Status: Automation & Coverage Adoption",
+    tooltip=[{field=:feature, type="nominal"}, {field=:count, type="quantitative"}, {field=:percent, type="quantitative"}]
+) |>
+save("data/visualizations/packages_ci_status.png")
+
+# MAINTENANCE HEALTH: Active vs Maintenance vs Inactive
+activity_threshold_days = 180
+current_date = now(UTC)
+
+# Try parsing dates - handle both ISO 8601 and other formats
+function safe_parse_datetime(date_str)
+    isempty(date_str) && return nothing
+    ismissing(date_str) && return nothing
+    try
+        # Try ISO 8601 format first (e.g., "2025-01-17T10:30:45Z")
+        return DateTime(date_str[1:end-1])  # Remove Z
+    catch
+        try
+            return DateTime(date_str)
+        catch
+            return nothing
+        end
+    end
+end
+
+packages_df.pushed_at_parsed = safe_parse_datetime.(packages_df.pushed_at)
+
+# Calculate days since push
+packages_df.days_since_push = [
+    if isnothing(dt)
+        missing
+    else
+        try
+            days = Dates.value(current_date - dt) / (1000 * 60 * 60 * 24)
+            days >= 0 ? days : missing
+        catch
+            missing
+        end
+    end
+    for dt in packages_df.pushed_at_parsed
+]
+
+# Count valid dates for each category
+valid_dates = .!ismissing.(packages_df.days_since_push)
+active_count = sum((packages_df.days_since_push .< activity_threshold_days) .& valid_dates)
+maintenance_count = sum(((packages_df.days_since_push .>= activity_threshold_days) .& (packages_df.days_since_push .< 365)) .& valid_dates)
+inactive_count = sum((packages_df.days_since_push .>= 365) .& valid_dates)
+unknown_count = sum(.!valid_dates)
+
+maintenance_status = DataFrame(
+    status=String[],
+    count=Int[]
+)
+push!(maintenance_status, (status="Active (< 180 days)", count=active_count))
+push!(maintenance_status, (status="Maintenance (180-365 days)", count=maintenance_count))
+push!(maintenance_status, (status="Inactive (> 365 days)", count=inactive_count))
+if unknown_count > 0
+    push!(maintenance_status, (status="Unknown", count=unknown_count))
+end
+
+maintenance_status |>
+@vlplot(
+    :bar,
+    x=:count,
+    y={:status, sort="-x"},
+    color={:status, scale={scheme="set2"}, legend={disable=true}},
+    width=600,
+    height=200,
+    title="Maintenance Health: Active vs Maintenance vs Inactive Packages",
+    tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}]
+) |>
+save("data/visualizations/packages_maintenance_health.png")
+
+# REGISTRY ADOPTION: Ecosystem maturity
+print_progress("Registry Adoption Status")
+registry_data = DataFrame(
+    category=String[],
+    count=Int[]
+)
+push!(registry_data, (category="In General Registry", count=sum(packages_df.in_general_registry)))
+push!(registry_data, (category="Not in Registry", count=sum(.!packages_df.in_general_registry)))
+
+registry_data.percent = round.(100 .* registry_data.count ./ nrow(packages_df); digits=1)
+registry_data.label = registry_data.category .* " (" .* string.(registry_data.percent) .* "%)"
+
+registry_data |>
+@vlplot(
+    mark={:arc, innerRadius=0},
+    theta=:count,
+    color={field=:label, type="nominal", scale={scheme="category10"}},
+    width=500,
+    height=300,
+    title="Registry Adoption: Ecosystem Maturity Status",
+    tooltip=[{field=:category, type="nominal"}, {field=:count, type="quantitative"}, {field=:percent, type="quantitative"}]
+) |>
+save("data/visualizations/packages_registry_status.png")
+
+# CODE COVERAGE STATUS: Which packages have coverage configured
+print_progress("Code Coverage Status")
+coverage_status = DataFrame(
+    status=String[],
+    count=Int[]
+)
+push!(coverage_status, (status="Has Code Coverage", count=sum(packages_df.has_code_coverage)))
+push!(coverage_status, (status="No Code Coverage", count=nrow(packages_df) - sum(packages_df.has_code_coverage)))
+
+coverage_status.percent = round.(100 .* coverage_status.count ./ nrow(packages_df); digits=1)
+coverage_status.label = coverage_status.status .* " (" .* string.(coverage_status.percent) .* "%)"
+
+coverage_status |>
+@vlplot(
+    mark={:arc, innerRadius=0},
+    theta=:count,
+    color={field=:label, type="nominal", scale={scheme="greens"}},
+    width=500,
+    height=300,
+    title="Code Coverage Status: Testing Infrastructure Adoption",
+    tooltip=[{field=:status, type="nominal"}, {field=:count, type="quantitative"}, {field=:percent, type="quantitative"}]
+) |>
+save("data/visualizations/packages_code_coverage.png")
+
+# PACKAGE MATURITY TIERS: Stable vs Developing vs Early
+print_progress("Package Maturity Tiers")
+packages_df.maturity_tier = map(eachrow(packages_df)) do row
+    in_registry = row.in_general_registry
+    releases = row.releases_count
+    
+    if !in_registry
+        "Early"
+    elseif releases >= 10
+        "Stable"
+    elseif releases >= 1
+        "Developing"
+    else
+        "Early"
+    end
+end
+
+maturity_counts = combine(
+    groupby(packages_df, :maturity_tier),
+    nrow => :count
+)
+
+# Order by count
+sort!(maturity_counts, :count, rev=true)
+maturity_counts |>
+@vlplot(
+    :bar,
+    x=:count,
+    y={:maturity_tier, sort="-x"},
+    color={:maturity_tier, scale={scheme="blues"}},
+    width=600,
+    height=200,
+    title="Package Maturity Tiers: Ecosystem Distribution",
+    tooltip=[{field=:maturity_tier, type="nominal"}, {field=:count, type="quantitative"}]
+) |>
+save("data/visualizations/packages_maturity_tiers.png")
+
+# REPOSITORY STRUCTURE COMPLIANCE: Missing key directories
+print_progress("Repository Structure Compliance")
+
+structure_compliance = DataFrame(
+    feature=["Has src/ directory", "Has test/ directory", "Has docs/ directory", "Has Project.toml"],
+    count=[
+        sum(packages_df.has_src_dir),
+        sum(packages_df.has_test_dir),
+        sum(packages_df.has_docs_dir),
+        sum(packages_df.has_project_toml)
+    ]
+)
+structure_compliance.percent = round.(100 .* structure_compliance.count ./ nrow(packages_df); digits=1)
+
+structure_compliance |>
+@vlplot(
+    :bar,
+    x={:percent, axis={title="Adoption (%)"}},
+    y={:feature, sort="-x"},
+    color={value="#3498db"},
+    width=600,
+    height=200,
+    title="Repository Structure Compliance: Standard Layout Adoption",
+    tooltip=[{field=:feature, type="nominal"}, {field=:count, type="quantitative"}, {field=:percent, type="quantitative"}]
+) |>
+save("data/visualizations/packages_structure_compliance.png")
+
+println("\n[Done] All package visualizations generated!")

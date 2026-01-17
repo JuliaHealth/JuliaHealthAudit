@@ -1,83 +1,133 @@
 # JuliaHealth Ecosystem Audit Results
 
-##  Package Audit Visualizations
+## Summary
 
-### Standards & Quality
-
-![Standards Compliance](data/visualizations/01_packages_standards_compliance.png)
-
-![Standards Percentages](data/visualizations/02_packages_standards_percentages.png)
-
-![Style Guide Distribution](data/visualizations/03_packages_style_guide_distribution.png)
-
-### Community Metrics
-
-![Top 15 by Stars](data/visualizations/04_packages_top15_stars.png)
-
-![Top 15 by Contributors](data/visualizations/05_packages_top15_contributors.png)
-
-![Top 15 by Releases](data/visualizations/06_packages_top15_releases.png)
-
-### Documentation
-
-![Documentation Adoption](data/visualizations/07_packages_documentation_adoption.png)
-
-### Infrastructure
-
-![CI/CD Adoption](data/visualizations/08_packages_ci_adoption.png)
-
-![Registry Adoption](data/visualizations/09_packages_registry_adoption.png)
-
-### Distribution Patterns
-
-![Stars Distribution](data/visualizations/10_packages_stars_distribution.png)
-
-![README Quality](data/visualizations/11_packages_readme_quality.png)
-
-![Contributors Distribution](data/visualizations/12_packages_contributors_distribution.png)
-
-![Releases Distribution](data/visualizations/13_packages_releases_distribution.png)
-
-### Project Status
-
-![Archive Status](data/visualizations/14_packages_archive_status.png)
-
-![Fork Status](data/visualizations/15_packages_fork_status.png)
-
-### Community Engagement
-
-![Issues Comparison](data/visualizations/16_packages_issues_comparison.png)
-
-![PRs Comparison](data/visualizations/17_packages_prs_comparison.png)
+This comprehensive audit evaluates the **JuliaHealth ecosystem** across various packages and non-package resources, analyzing metrics to assess standards compliance, documentation, infrastructure, community engagement and maintenance health. These findings support the NumFOCUS Small Development Grant objectives.
 
 
-##  Non-Package Audit Visualizations
+## Standards & Quality Assessment
 
-### Community Resources
+### Overall Compliance Overview
 
-![All Non-Packages by Stars](data/visualizations/18_nonpackages_all_stars.png)
+![](data/visualizations/packages_standards_compliance.png)
 
-![All Non-Packages by Contributors](data/visualizations/19_nonpackages_all_contributors.png)
+![](data/visualizations/packages_standards_percentages.png)
 
-### Resource Status
+### Development Approaches
 
-![Archive Status](data/visualizations/20_nonpackages_archive_status.png)
+![](data/visualizations/packages_style_guide_distribution.png)
 
-![CI/CD Adoption](data/visualizations/21_nonpackages_ci_adoption.png)
+## Ecosystem Maturity & Structure
 
-![License Status](data/visualizations/22_nonpackages_license_status.png)
+### Package Classification
 
-### Support Quality
+![](data/visualizations/packages_maturity_tiers.png)
 
-![Issue Resolution Rates](data/visualizations/23_nonpackages_issue_resolution.png)
+| Tier | Criteria |
+|---|---|
+| Stable | In General Registry; releases >= 10 |
+| Developing | In General Registry; releases >= 1 |
+| Early | Not in General Registry OR no releases |
 
-![PR Resolution Rates](data/visualizations/24_nonpackages_pr_resolution.png)
+### Repository Structure Compliance
+
+![](data/visualizations/packages_structure_compliance.png)
+
+**Adoption of standard Julia package layout:** src/, test/, docs/, Project.toml
+
+### Registry Integration
+
+![](data/visualizations/packages_registry_status.png)
+
+## Documentation & CI/CD Infrastructure
+
+### Documentation Coverage Assessment
+
+![](data/visualizations/packages_docs_audit_coverage.png)
+
+### CI/CD Automation Status
+
+![](data/visualizations/packages_ci_status.png)
+
+![](data/visualizations/packages_ci_adoption.png)
+
+### Code Coverage & Testing
+
+## Community Engagement & Maintenance
+
+### Maintenance Status
+
+![](data/visualizations/packages_maintenance_health.png)
+
+| Status | Criteria |
+|---|---|
+| Active | Last push < 180 days |
+| Maintenance | Last push 180–365 days |
+| Inactive | Last push > 365 days |
+| Unknown | Timestamp unavailable or unparsable |
+
+### Top Packages by Community Engagement
+
+![](data/visualizations/packages_top15_stars.png)
+
+![](data/visualizations/packages_top15_contributors.png)
+
+### Release & Development Activity
+
+![](data/visualizations/packages_releases_distribution.png)
+
+![](data/visualizations/packages_stars_distribution.png)
+
+### Contributor Patterns
+
+![](data/visualizations/packages_contributors_distribution.png)
+
+### Repository Activity
+
+![](data/visualizations/packages_archive_status.png)
+
+![](data/visualizations/packages_fork_status.png)
+
+## Community Contribution & Issue Management
+
+### Issue & PR Activity
+
+![](data/visualizations/packages_issues_comparison.png)
+
+![](data/visualizations/packages_prs_comparison.png)
+
+## Licensing & Documentation Accessibility
+
+### GitHub Pages Documentation Accessibility
+
+![](data/visualizations/packages_github_pages_adoption.png)
+
+### README Quality Assessment
+
+![](data/visualizations/packages_readme_quality.png)
+
+## Non-Package Resources Assessment
+
+This section audits supporting resources (documentation sites, tutorials, reference implementations) that enhance the JuliaHealth ecosystem.
+
+### Popularity & Engagement
+
+![](data/visualizations/nonpackages_all_stars.png)
+
+![](data/visualizations/nonpackages_all_contributors.png)
+
+### Infrastructure Quality
+
+![](data/visualizations/nonpackages_ci_adoption.png)
+
+![](data/visualizations/nonpackages_license_status.png)
 
 ### Activity Status
 
-![Issues Comparison](data/visualizations/25_nonpackages_issues_comparison.png)
+![](data/visualizations/nonpackages_issues_comparison.png)
 
-![PRs Comparison](data/visualizations/26_nonpackages_prs_comparison.png)
+![](data/visualizations/nonpackages_prs_comparison.png)
 
-**Report Generated:** Auto-generated by \scripts/visualizations/visualize.jl\  
+**Report Generated:** Auto-generated by scripts/visualizations/visualize.jl  
 **Data Source:** GitHub API audit of JuliaHealth repositories
+
