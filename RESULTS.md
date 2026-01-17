@@ -33,8 +33,6 @@ This comprehensive audit evaluates the **JuliaHealth ecosystem** across various 
 
 ![](data/visualizations/packages_structure_compliance.png)
 
-**Adoption of standard Julia package layout:** src/, test/, docs/, Project.toml
-
 ### Registry Integration
 
 ![](data/visualizations/packages_registry_status.png)
@@ -50,8 +48,6 @@ This comprehensive audit evaluates the **JuliaHealth ecosystem** across various 
 ![](data/visualizations/packages_ci_status.png)
 
 ![](data/visualizations/packages_ci_adoption.png)
-
-### Code Coverage & Testing
 
 ## Community Engagement & Maintenance
 
