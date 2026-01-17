@@ -19,5 +19,8 @@ jobs:
       - name: Install dependencies
         run: julia --project=. -e 'using Pkg; Pkg.instantiate()'
 
+      - name: Create .env file
+        run: echo "GITHUB_TOKEN=${{ secrets.GH_TOKEN }}" > .env
+
       - name: Run audit pipeline
         run: julia --project=. scripts/main.jl
