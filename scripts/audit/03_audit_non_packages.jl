@@ -25,8 +25,6 @@ function audit_non_package(row)
     closed_issues = get_closed_issues_count(owner, repo)
     closed_prs = get_closed_prs_count(owner, repo)
 
-    commits_last_year = get_commits_last_year(owner, repo)
-
     issue_resolution_rate = if (open_issues + closed_issues > 0)
         round(100 * closed_issues / (open_issues + closed_issues); digits=1)
     else

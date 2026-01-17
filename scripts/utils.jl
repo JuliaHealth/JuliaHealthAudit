@@ -4,7 +4,6 @@
 using DotEnv
 using HTTP
 using JSON3
-using Dates
 using Base64
 using TOML
 
@@ -252,37 +251,6 @@ function get_latest_release_date(owner, repo)
         return missing
     end
     return get(data[1], :published_at, missing)
-end
-
-"""  
-    get_commits_last_year(owner, repo)
-
-Count the number of commits in the last year.
-"""
-function get_commits_last_year(owner, repo)
-    try
-        one_year_ago = Dates.format(now(UTC) - Year(1), "yyyy-mm-ddTHH:MM:SSZ")
-        all_commits = []
-        page = 1
-        per_page = 100
-
-        while true
-            data = github_request(
-                "/repos/$owner/$repo/commits?since=$one_year_ago&per_page=$per_page&page=$page",
-            )
-            isnothing(data) && break
-            isempty(data) && break
-
-            append!(all_commits, data)
-
-            length(data) < per_page && break
-            page += 1
-        end
-
-        return length(all_commits)
-    catch
-        return 0
-    end
 end
 
 """

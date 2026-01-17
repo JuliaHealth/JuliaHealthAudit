@@ -4,8 +4,6 @@
 using CSV
 using DataFrames
 using VegaLite
-using Statistics
-using Dates
 
 mkpath("data/visualizations")
 

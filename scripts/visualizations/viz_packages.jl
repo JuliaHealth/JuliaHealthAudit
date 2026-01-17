@@ -49,7 +49,7 @@ p1 |> save("data/visualizations/01_packages_standards_compliance.png")
 summary_rows = DataFrame(standard=String[], percent=Float64[], count=Int[])
 for col in compliance_cols
     values = packages_df[!, col]
-    push!(summary_rows, (standard=String(col), percent=100 * mean(values), count=sum(values)))
+    push!(summary_rows, (standard=String(col), percent=100 * (sum(values) / length(values)), count=sum(values)))
 end
 compliance_summary = sort(summary_rows, :percent, rev=true)
 compliance_summary |>
