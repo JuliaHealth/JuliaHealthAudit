@@ -23,6 +23,7 @@ function audit_package(row)
     has_src_dir = any(p -> startswith(p, "src/"), tree_paths)
     has_test_dir = any(p -> startswith(p, "test/"), tree_paths)
     has_ci = any(p -> startswith(p, ".github/workflows/"), tree_paths)
+    code_coverage_config = has_code_coverage(owner, repo, tree_paths)
     has_gh_pages = has_gh_pages_branch(owner, repo)
     uses_documenter = any(p -> p == "docs/make.jl", tree_paths)
     has_project_toml = "Project.toml" in tree_paths
@@ -75,8 +76,9 @@ function audit_package(row)
         uses_documenter=uses_documenter,
         has_contributing_md=has_contributing,
         has_code_of_conduct=has_code_of_conduct,
-        # 4. CI/Testing (1)
+        # 4. CI/Testing (2)
         has_ci_workflow=has_ci,
+        has_code_coverage=code_coverage_config,
         # 5. Package Maturity (2)
         releases_count=releases_count,
         latest_release_date=latest_release_date,

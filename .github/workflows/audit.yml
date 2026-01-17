@@ -45,6 +45,6 @@ jobs:
 
           # Commit and push only if there are changes
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "Update audit results [skip ci]"
+            git commit -m "update audit results"
             git push
           fi

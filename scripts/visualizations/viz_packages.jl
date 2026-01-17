@@ -22,6 +22,7 @@ compliance_cols = [
     :follows_standard_layout,
     :has_docs_dir,
     :has_ci_workflow,
+    :has_code_coverage,
     :has_contributing_md,
     :has_code_of_conduct,
 ]
@@ -404,6 +405,7 @@ docs_audit |>
 save("data/visualizations/packages_docs_audit_coverage.png")
 
 # CI/CD STATUS: GitHub Actions adoption and coverage
+print_progress("CI/CD Status")
 ci_status = DataFrame(
     feature=["Has CI Workflow", "Has Code Coverage", "Standard Repository Layout"],
     count=[
@@ -608,3 +610,4 @@ structure_compliance |>
 save("data/visualizations/packages_structure_compliance.png")
 
 println("\n[Done] All package visualizations generated!")
+
