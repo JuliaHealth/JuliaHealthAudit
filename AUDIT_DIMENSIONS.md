@@ -30,22 +30,21 @@ This document defines the audit metrics for both **Packages** (`.jl` repositorie
 | 14  | has_contributing_md      | Boolean | Documentation | `CONTRIBUTING.md` exists                     |
 | 15  | has_code_of_conduct      | Boolean | Documentation | `CODE_OF_CONDUCT.md` exists                  |
 | 16  | has_ci_workflow          | Boolean | CI/Testing    | `.github/workflows/` exists                  |
-| 17  | releases_count           | Integer | Maturity      | Total number of releases                     |
-| 18  | latest_release_date      | Date    | Maturity      | Date of latest release                       |
-| 19  | pushed_at                | Date    | Activity      | Last push date                               |
-| 20  | stars                    | Integer | Activity      | GitHub stars                                 |
-| 21  | contributors_count       | Integer | Activity      | Number of contributors                       |
-| 22  | open_issues_count        | Integer | Activity      | Open issues (excluding PRs)                  |
-| 23  | closed_issues_count      | Integer | Activity      | Closed issues                                |
-| 24  | issue_resolution_rate    | Float   | Activity      | % issues resolved                            |
-| 25  | open_prs_count           | Integer | Activity      | Open pull requests                           |
-| 26  | closed_prs_count         | Integer | Activity      | Closed / merged PRs                          |
-| 27  | pr_resolution_rate       | Float   | Activity      | % PRs resolved                               |
-| 28  | readme_has_code_blocks   | Boolean | Quality       | README contains code blocks                  |
-| 29  | readme_line_count        | Integer | Quality       | Number of lines in README                    |
-| 30  | style_guide_type         | String  | Quality       | Code style (blue, sciml, default, Runic, or none) |
-
-<br>
+| 17  | has_code_coverage        | Boolean | CI/Testing    | Code coverage (codecov/codacy) configured    |
+| 18  | releases_count           | Integer | Maturity      | Total number of releases                     |
+| 19  | latest_release_date      | Date    | Maturity      | Date of latest release                       |
+| 20  | pushed_at                | Date    | Activity      | Last push date                               |
+| 21  | stars                    | Integer | Activity      | GitHub stars                                 |
+| 22  | contributors_count       | Integer | Activity      | Number of contributors                       |
+| 23  | open_issues_count        | Integer | Activity      | Open issues (excluding PRs)                  |
+| 24  | closed_issues_count      | Integer | Activity      | Closed issues                                |
+| 25  | issue_resolution_rate    | Float   | Activity      | % issues resolved                            |
+| 26  | open_prs_count           | Integer | Activity      | Open pull requests                           |
+| 27  | closed_prs_count         | Integer | Activity      | Closed / merged PRs                          |
+| 28  | pr_resolution_rate       | Float   | Activity      | % PRs resolved                               |
+| 29  | readme_has_code_blocks   | Boolean | Quality       | README contains code blocks                  |
+| 30  | readme_line_count        | Integer | Quality       | Number of lines in README                    |
+| 31  | style_guide_type         | String  | Quality       | Code style (blue, sciml, default, Runic, or none) |
 
 ### Package Metrics by Category
 
@@ -54,13 +53,11 @@ This document defines the audit metrics for both **Packages** (`.jl` repositorie
 | Identity      | 5      | package_name, github_repo_url, in_general_registry, is_fork, is_archived                                                     |
 | Structure     | 5      | has_src_dir, has_test_dir, has_project_toml, has_license, follows_standard_layout                                            |
 | Documentation | 5      | has_docs_dir, has_gh_pages, uses_documenter, has_contributing_md, has_code_of_conduct                                        |
-| CI/Testing    | 1      | has_ci_workflow                                                                                                               |
+| CI/Testing    | 2      | has_ci_workflow, has_code_coverage                                                                                            |
 | Maturity      | 2      | releases_count, latest_release_date                                                                                           |
 | Activity      | 9      | pushed_at, stars, contributors_count, open_issues_count, closed_issues_count, issue_resolution_rate, open_prs_count, closed_prs_count, pr_resolution_rate |
 | Quality       | 3      | readme_has_code_blocks, readme_line_count, style_guide_type                                                                   |
-| **Total**     | **31** | —                                                                                                                                                         |
-
-<br>
+| **Total**     | **32** | —                                                                                                                                                         |
 
 ## Non-Packages Audit (`03_audit_non_packages.jl`)
 
@@ -87,8 +84,6 @@ This document defines the audit metrics for both **Packages** (`.jl` repositorie
 | 13  | pr_resolution_rate    | Float   | Activity      | % PRs resolved             |
 | 14  | has_ci_workflow       | Boolean | CI/CD         | CI workflow exists         |
 
-<br>
-
 ### Non-Package Metrics by Category
 
 | Category      | Count  | Metrics                                                                                                                       |
@@ -98,5 +93,3 @@ This document defines the audit metrics for both **Packages** (`.jl` repositorie
 | Activity      | 9      | pushed_at, stars, contributors_count, open_issues_count, closed_issues_count, issue_resolution_rate, open_prs_count, closed_prs_count, pr_resolution_rate |
 | CI/CD         | 1      | has_ci_workflow                                                                                                               |
 | **Total**     | **14** | —                                                                                                                                                         |
-
-<br>
