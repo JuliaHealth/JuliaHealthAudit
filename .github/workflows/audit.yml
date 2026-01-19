@@ -33,6 +33,9 @@ jobs:
       - name: Run audit pipeline
         run: julia --project=. scripts/main.jl
 
+      - name: Generate audit lists
+        run: julia --project=. scripts/discovery/generate_audit_lists.jl
+
       - name: Commit and push results
         run: |
           # Configure git identity
@@ -42,6 +45,7 @@ jobs:
           # Stage audit output files
           git add data/results/*.csv
           git add data/visualizations/*.png
+          git add data/results/lists/* || true
 
           # Commit and push only if there are changes
           if ! git diff --quiet || ! git diff --staged --quiet; then

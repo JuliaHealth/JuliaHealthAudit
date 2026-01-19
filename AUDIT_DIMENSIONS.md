@@ -23,7 +23,7 @@ This document defines the audit metrics for both **Packages** (`.jl` repositorie
 | 7   | has_test_dir             | Boolean | Structure     | `test/` directory exists                     |
 | 8   | has_project_toml         | Boolean | Structure     | `Project.toml` exists                        |
 | 9   | has_license              | Boolean | Structure     | LICENSE file exists                          |
-| 10  | follows_standard_layout  | Boolean | Structure     | Has `src/`, `test/`, `docs/`, `Project.toml` |
+| 10  | follows_standard_layout  | Boolean | Structure     | Has `src/`, `test/`, `docs/`, `Project.toml`, ci, documenter, codecov |
 | 11  | has_docs_dir             | Boolean | Documentation | `docs/` directory exists                     |
 | 12  | has_gh_pages             | Boolean | Documentation | `gh-pages` branch exists                     |
 | 13  | uses_documenter          | Boolean | Documentation | `docs/make.jl` exists                        |

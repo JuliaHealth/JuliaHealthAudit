@@ -20,7 +20,11 @@ isfile(REGISTRY_PKGS) ||
 
 org_repos = CSV.read(ORG_REPOS, DataFrame)
 registry_packages = Set(CSV.read(REGISTRY_PKGS, DataFrame).package_name)
-registry_mismatches = isfile(REGISTRY_MISMATCHES) ? Set(CSV.read(REGISTRY_MISMATCHES, DataFrame).package_name) : Set{String}()
+registry_mismatches = if isfile(REGISTRY_MISMATCHES)
+    Set(CSV.read(REGISTRY_MISMATCHES, DataFrame).package_name)
+else
+    Set{String}()
+end
 
 packages_df = DataFrame(;
     package_name=String[],
@@ -52,7 +56,8 @@ for row in eachrow(org_repos)
         # PACKAGES: Include all with .jl suffix
         pkg_name = row.name
         pkg_name_base = strip_jl(row.name)
-        in_registry = (pkg_name_base in registry_packages) || (pkg_name_base in registry_mismatches)
+        in_registry =
+            (pkg_name_base in registry_packages) || (pkg_name_base in registry_mismatches)
 
         push!(
             packages_df,

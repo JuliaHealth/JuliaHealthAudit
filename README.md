@@ -5,9 +5,7 @@
 
 ## What This Is
 
-A fully automated, reproducible audit of the **JuliaHealth ecosystem** that analyzes repositories across metrics including documentation, CI/testing, code coverage, code structure, project maturity, activity metrics and code quality.
-
-**Use case**: Identify ecosystem strengths/weaknesses, guide community contributions, and support grant-funded improvements.
+A fully automated, reproducible audit of the **JuliaHealth ecosystem** that analyzes repositories across metrics including documentation, CI/testing, code coverage, code structure, project maturity, activity metrics and code quality. **Use case**: Identify ecosystem strengths/weaknesses, guide community contributions, and support grant-funded improvements.
 
 ## Run the Audit
 
@@ -54,14 +52,13 @@ For developers running the audit on their machine:
 
 ## What Gets Audited
 
-6 categories across **37 package metrics** and **14 non-package metrics**:
+The audit evaluates each JuliaHealth repository across these categories:
 
-- **Documentation**: README, docs/, Documenter.jl, CONTRIBUTING.md, CODE_OF_CONDUCT
-- **CI/Testing**: GitHub Actions, code coverage (codecov), test suite
-- **Structure**: src/, test/, Project.toml, standard layout
-- **Maturity**: Release history, first/latest release dates, commit activity
-- **Activity**: Stars, contributors, open/closed issues, PR resolution rates
-- **Quality**: Code style, README examples
+- **Documentation**: Presence and quality of docs, Documenter.jl usage, CONTRIBUTING.md, CODE_OF_CONDUCT
+- **CI/CD & Testing**: GitHub Actions, code coverage, test suite status
+- **Community & Activity**: Stars, contributors, issue and PR activity, maintenance health
+- **Code Quality & Standards**: Code style, README examples, style guide adoption, license
+- **Package Structure & Maturity**: Standard layout (src/, test/, Project.toml), registry status, release history
 
 **Full metric definitions**: [AUDIT_DIMENSIONS.md](AUDIT_DIMENSIONS.md)
 
@@ -73,7 +70,8 @@ scripts/
   ├── utils.jl                        ← Shared utilities
   ├── discovery/
   │   ├── discover_org.jl
-  │   └── discover_registry.jl
+  │   ├── discover_registry.jl
+  │   └── generate_audit_lists.jl    
   ├── audit/
   │   ├── 01_separate_packages.jl
   │   ├── 02_audit_packages.jl        
@@ -89,6 +87,8 @@ data/
   │   ├── registry_packages.csv
   │   └── registry_mismatches.csv
   ├── results/
+  │   ├── lists/ 
+  │       └── *.txt      
   │   ├── packages.csv                ← Intermediate 
   │   ├── non_packages.csv            ← Intermediate 
   │   ├── audit_packages.csv          ← Final audit output

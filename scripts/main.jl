@@ -51,12 +51,16 @@ function main()
     println("\nPhase 4: Generating Visualizations\n")
     include("visualizations/visualize.jl")
 
+    println("\nPhase 5: Generating audit lists\n")
+    include("discovery/generate_audit_lists.jl")
+
     println("\nAudit Complete!")
     println("Results saved to:")
     println("- data/results/audit_packages.csv")
     println("- data/results/audit_non_packages.csv")
-    println("- data/visualizations/*.png")
-    println("- RESULTS.md\n")
+    println("- data/visualizations/*.html")
+    println("- data/results/lists/*.txt")
+    println("- RESULTS.md (comprehensive report)\n")
 end
 
 main()

@@ -43,8 +43,20 @@ function audit_package(row)
 
     releases_count = get_releases_count(owner, repo)
     latest_release_date = get_latest_release_date(owner, repo)
+    required_items_ok = has_src_dir && has_project_toml && has_license
 
-    follows_standard = has_src_dir && has_test_dir && has_docs_dir && has_project_toml
+    has_readme_examples = !ismissing(readme_lines) && readme_has_code && readme_lines >= 5
+    recommended_checks = (
+        has_src_dir,
+        has_project_toml,
+        has_test_dir,
+        has_docs_dir,
+        has_ci,
+        uses_documenter,
+        code_coverage_config,
+    )
+
+    follows_standard = required_items_ok && all(recommended_checks)
 
     issue_resolution_rate = if (open_issues + closed_issues > 0)
         round(100 * closed_issues / (open_issues + closed_issues); digits=1)

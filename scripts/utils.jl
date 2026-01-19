@@ -286,21 +286,29 @@ Detects:
   - Codecov in workflow files
 """
 function has_code_coverage(owner, repo, tree_paths)
-    has_standalone = any(p -> startswith(p, ".codecov") || startswith(p, "codecov.yml") || startswith(p, ".codacy"), tree_paths)
+    has_standalone = any(
+        p ->
+            startswith(p, ".codecov") ||
+            startswith(p, "codecov.yml") ||
+            startswith(p, ".codacy"),
+        tree_paths,
+    )
     has_standalone && return true
-    
+
     # Check for codecov in workflow files
-    workflow_files = filter(p -> startswith(p, ".github/workflows/") && endswith(p, ".yml"), tree_paths)
+    workflow_files = filter(
+        p -> startswith(p, ".github/workflows/") && endswith(p, ".yml"), tree_paths
+    )
     for workflow_file in workflow_files
         try
             data = github_request("/repos/$owner/$repo/contents/$workflow_file")
             isnothing(data) && continue
-            
+
             content_encoded = get(data, :content, "")
             isempty(content_encoded) && continue
-            
+
             content = String(base64decode(replace(content_encoded, "\n" => "")))
-            
+
             # Check if codecov is mentioned in the workflow
             if occursin("codecov", lowercase(content))
                 return true
@@ -309,7 +317,7 @@ function has_code_coverage(owner, repo, tree_paths)
             continue
         end
     end
-    
+
     return false
 end
 
