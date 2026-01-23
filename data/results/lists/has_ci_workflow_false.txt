@@ -4,8 +4,8 @@ ITKIOWrapp.jl
 MedEval3D.jl
 MedPipe3D.jl
 WrapperITKIO.jl
+JuliaHealthEcosystemPaper
+JuliaHealthZoo
 MedPipe3DTutorial
 OMOPCDMPredictor
 ObservationalHealthSubecosystemPaper
-JuliaHealthEcosystemPaper
-JuliaHealthZoo

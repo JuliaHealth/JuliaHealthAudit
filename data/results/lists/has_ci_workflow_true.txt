@@ -40,8 +40,8 @@ PubMedMiner.jl
 SMARTAppLaunch.jl
 SMARTBackendServices.jl
 Thunderbolt.jl
-JuliaHealthWebsiteOld
-JuliaHealthLLM
 EpiJ
 JuliaHealthAudit
+JuliaHealthLLM
+JuliaHealthWebsiteOld
 OMOPCDMMetrics

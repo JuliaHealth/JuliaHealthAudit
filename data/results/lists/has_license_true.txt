@@ -46,8 +46,8 @@ SMARTAppLaunch.jl
 SMARTBackendServices.jl
 Thunderbolt.jl
 WrapperITKIO.jl
-JuliaHealthLLM
-OMOPCDMPredictor
 EpiJ
 JuliaHealthAudit
+JuliaHealthLLM
 OMOPCDMMetrics
+OMOPCDMPredictor
