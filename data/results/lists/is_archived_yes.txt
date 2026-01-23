@@ -1,2 +1,0 @@
-WrapperITKIO.jl
-ITKIOWrapp.jl

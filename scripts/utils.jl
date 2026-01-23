@@ -1,8 +1,8 @@
 # scripts/utils.jl
-# Common utilities and GitHub API functions for the audit pipeline
 
 using DotEnv
 using HTTP
+using Dates
 using JSON3
 using Base64
 using TOML
@@ -22,12 +22,7 @@ function load_env_vars()
     return token
 end
 
-# Initialize token as module-level variable
 const GITHUB_TOKEN = load_env_vars()
-
-# ===================================================================
-# GitHub API Functions
-# ===================================================================
 
 """
     parse_repo_url(url)
@@ -108,6 +103,8 @@ end
     get_contributors_count(owner, repo)
 
 Count total contributors by paginating through all pages.
+Returns (human_count, bot_count).
+Bots are identified by type="Bot" in GitHub API response.
 """
 function get_contributors_count(owner, repo)
     try
@@ -128,9 +125,49 @@ function get_contributors_count(owner, repo)
             page += 1
         end
 
-        return length(all_contributors)
+        human_count = sum(
+            1 for contrib in all_contributors if get(contrib, :type, "User") != "Bot"
+        )
+        bot_count = length(all_contributors) - human_count
+
+        return human_count, bot_count
     catch e
-        return 0
+        return 0, 0
+    end
+end
+
+"""
+    get_all_contributors_list(owner, repo)
+
+Get all contributors as a semicolon-separated string.
+"""
+function get_all_contributors_list(owner, repo)
+    try
+        all_contributors = []
+        page = 1
+        per_page = 100
+
+        while true
+            data = github_request(
+                "/repos/$owner/$repo/contributors?per_page=$per_page&page=$page"
+            )
+            isnothing(data) && break
+            isempty(data) && break
+
+            append!(all_contributors, data)
+
+            length(data) < per_page && break
+            page += 1
+        end
+
+        human_contributors = [
+            get(c, :login, "") for c in all_contributors if
+            get(c, :type, "User") != "Bot" && !isempty(get(c, :login, ""))
+        ]
+
+        return join(human_contributors, "; ")
+    catch e
+        return ""
     end
 end
 
@@ -265,19 +302,6 @@ function has_gh_pages_branch(owner, repo)
 end
 
 """
-    check_readme_quality(content)
-
-Check if README has code blocks and count lines.
-Returns (has_code_blocks, line_count).
-"""
-function check_readme_quality(content)
-    isempty(content) && return false, 0
-    lines = split(content, "\n")
-    has_code = occursin("```", content) || occursin("    ", content)
-    return has_code, length(lines)
-end
-
-"""
     has_code_coverage(owner, repo, tree_paths)
 
 Check if repository has code coverage configuration.
@@ -295,7 +319,6 @@ function has_code_coverage(owner, repo, tree_paths)
     )
     has_standalone && return true
 
-    # Check for codecov in workflow files
     workflow_files = filter(
         p -> startswith(p, ".github/workflows/") && endswith(p, ".yml"), tree_paths
     )
@@ -309,7 +332,6 @@ function has_code_coverage(owner, repo, tree_paths)
 
             content = String(base64decode(replace(content_encoded, "\n" => "")))
 
-            # Check if codecov is mentioned in the workflow
             if occursin("codecov", lowercase(content))
                 return true
             end
@@ -347,4 +369,211 @@ function detect_style_guide(owner, repo, tree_paths)
     end
 
     return "none"
+end
+
+"""
+    get_license_info(owner, repo)
+
+Fetch license information from GitHub API.
+Returns license SPDX ID (e.g., "MIT", "Apache-2.0", "BSD-3-Clause") or "Unknown".
+"""
+function get_license_info(owner, repo)
+    data = github_request("/repos/$owner/$repo")
+    isnothing(data) && return "Unknown"
+
+    license_info = get(data, :license, nothing)
+    isnothing(license_info) && return "Unknown"
+
+    spdx_id = get(license_info, :spdx_id, nothing)
+    if !isnothing(spdx_id) && spdx_id != "NOASSERTION"
+        return String(spdx_id)
+    end
+
+    license_name = get(license_info, :name, "Unknown")
+    return String(license_name)
+end
+
+function assess_readme_completeness(readme_content)
+    isempty(readme_content) && return (
+        has_install=false,
+        has_usage=false,
+        has_contributing=false,
+        lists_count=0,
+        links_count=0,
+        code_blocks_count=0,
+        badges_count=0,
+        sections_count=0,
+        readme_size=0,
+        completeness_score=0,
+        has_code_blocks=false,
+    )
+
+    content_lower = lowercase(readme_content)
+    lines = split(readme_content, '\n')
+    readme_size = length(lines)
+
+    has_install = occursin(r"##\s*(install|getting\s+started|setup)"i, readme_content)
+    has_usage = occursin(r"##\s*(usage|examples?|quick\s*start|tutorial)"i, readme_content)
+    has_contributing =
+        occursin(r"##\s*contribut"i, readme_content) ||
+        occursin("contributing.md", content_lower)
+
+    lists_count =
+        count(r"^[\s]*[-*+]\s+"m, readme_content) +
+        count(r"^[\s]*\d+\.\s+"m, readme_content)
+
+    links_count = count(r"\]\(https?://"i, readme_content)
+
+    code_blocks_count = count(r"```"i, readme_content) ÷ 2
+    has_code_blocks = code_blocks_count > 0
+
+    badges_count = count(r"\[!\[.*?\]\(.*?\)\]"i, readme_content)
+
+    sections_count = count(r"^##\s+"m, readme_content)
+
+    score = 0
+    has_install && (score += 1)
+    has_usage && (score += 1)
+    has_contributing && (score += 1)
+    (lists_count >= 3) && (score += 1)
+    (links_count >= 5) && (score += 1)
+    (code_blocks_count >= 2) && (score += 1)
+    (badges_count >= 1) && (score += 1)
+    (sections_count >= 4) && (score += 1)
+
+    return (
+        has_install=has_install,
+        has_usage=has_usage,
+        has_contributing=has_contributing,
+        lists_count=lists_count,
+        links_count=links_count,
+        code_blocks_count=code_blocks_count,
+        badges_count=badges_count,
+        sections_count=sections_count,
+        readme_size=readme_size,
+        completeness_score=score,
+        has_code_blocks=has_code_blocks,
+    )
+end
+
+function get_pr_metrics(org, repo)
+    avg_merge_days = missing
+    avg_response_days = missing
+
+    page = 1
+    all_prs = []
+    while true
+        data = github_request(
+            "/repos/$org/$repo/pulls?state=all&per_page=100&page=$page&sort=updated&direction=desc",
+        )
+        isnothing(data) && break
+        isempty(data) && break
+        append!(all_prs, data)
+        length(data) < 100 && break
+        page += 1
+    end
+
+    if !isempty(all_prs)
+        merge_times = []
+        response_times = []
+        merge_times_sum = 0.0
+        merge_times_count = 0
+
+        for pr in all_prs
+            merged_at = get(pr, :merged_at, nothing)
+            created_at_str = get(pr, :created_at, "")
+            updated_at_str = get(pr, :updated_at, "")
+
+            if !isnothing(merged_at) && !isempty(merged_at)
+                try
+                    created = DateTime(string(created_at_str)[1:(end - 1)])
+                    merged = DateTime(string(merged_at)[1:(end - 1)])
+                    days = Dates.value(merged - created) / (1000 * 60 * 60 * 24)
+                    if days >= 0
+                        push!(merge_times, days)
+                        merge_times_sum += days
+                        merge_times_count += 1
+                    end
+                catch
+                end
+            end
+
+            created_at_str = get(pr, :created_at, "")
+            if !isempty(created_at_str)
+                try
+                    created = DateTime(string(created_at_str)[1:(end - 1)])
+                    now_utc = now(UTC)
+                    days_open = Dates.value(now_utc - created) / (1000 * 60 * 60 * 24)
+
+                    if isnothing(merged_at) || isempty(merged_at)
+                        if days_open > 60
+                            stale_pr_count += 1
+                        end
+                    end
+
+                    if days_open >= 0
+                        push!(response_times, min(days_open, 30.0))
+                    end
+                catch
+                end
+            end
+        end
+
+        if !isempty(merge_times)
+            avg_merge_days = merge_times_sum / merge_times_count
+        end
+
+        if !isempty(response_times)
+            avg_response_days = sum(response_times) / length(response_times)
+        end
+    end
+
+    return (avg_merge_days=avg_merge_days, avg_response_days=avg_response_days)
+end
+
+"""
+    get_last_activity_date(org, repo)
+
+Return days since last activity and an identifier for the primary actor
+based on recent repository events; falls back to latest commit info.
+"""
+function get_last_activity_date(org, repo)
+    days_since = missing
+
+    events_data = github_request("/repos/$org/$repo/events?per_page=100")
+    if !isnothing(events_data) && !isempty(events_data)
+        last_event = events_data[1]
+        created_at_str = get(last_event, :created_at, "")
+        if !isempty(created_at_str)
+            try
+                last_activity = DateTime(string(created_at_str)[1:(end - 1)])
+                now_utc = now(UTC)
+                days_since = Dates.value(now_utc - last_activity) / (1000 * 60 * 60 * 24)
+
+            catch
+            end
+        end
+    end
+
+    if ismissing(days_since)
+        commits_data = github_request("/repos/$org/$repo/commits?per_page=1")
+        if !isnothing(commits_data) && !isempty(commits_data)
+            commit = commits_data[1]
+            commit_info = get(commit, :commit, Dict())
+            committer = get(commit_info, :committer, Dict())
+            date_str = get(committer, :date, "")
+            if !isempty(date_str)
+                try
+                    last_activity = DateTime(string(date_str)[1:(end - 1)])
+                    now_utc = now(UTC)
+                    days_since =
+                        Dates.value(now_utc - last_activity) / (1000 * 60 * 60 * 24)
+
+                catch
+                end
+            end
+        end
+    end
+
+    return (days_since_activity=days_since)
 end

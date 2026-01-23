@@ -25,7 +25,7 @@ The workflow will:
 - Commit results back to the repository
 - Update `RESULTS.md` with latest findings
 
-**Status**: Check the workflow run for logs and progress. Typical runtime: 3~5 minutes.
+**Status**: Check the workflow run for logs and progress. 
 
 ### Local Development
 
@@ -54,67 +54,49 @@ For developers running the audit on their machine:
 
 The audit evaluates each JuliaHealth repository across these categories:
 
-- **Documentation**: Presence and quality of docs, Documenter.jl usage, CONTRIBUTING.md, CODE_OF_CONDUCT
-- **CI/CD & Testing**: GitHub Actions, code coverage, test suite status
-- **Community & Activity**: Stars, contributors, issue and PR activity, maintenance health
-- **Code Quality & Standards**: Code style, README examples, style guide adoption, license
-- **Package Structure & Maturity**: Standard layout (src/, test/, Project.toml), registry status, release history
+- **Documentation & README**: Docs presence/quality, Documenter.jl usage, gh-pages, README completeness, CONTRIBUTING.md, CODE_OF_CONDUCT
+- **CI/CD, Testing & Coverage**: GitHub Actions workflows, CI status/adoption, coverage configs/mentions
+- **Structure, Licensing & Maturity**: Standard layout (src/test/Project.toml), General Registry status, maturity tiers, license presence/types
+- **Activity, Releases & Engagement**: Recent pushes, release counts, stars, contributor counts/distribution
+- **Issues & PR Health**: Open vs closed issues/PRs, review/triage signals
+- **Contributors (Cross-Ecosystem)**: Top by total and repo count, contribution distribution, engagement tiers
 
-**Full metric definitions**: [AUDIT_DIMENSIONS.md](AUDIT_DIMENSIONS.md)
+See full metric definitions: [AUDIT_DIMENSIONS.md](AUDIT_DIMENSIONS.md)
 
 ## Repository Layout
 
 ```
 scripts/
-  ├── main.jl                         ← Run this
-  ├── utils.jl                        ← Shared utilities
-  ├── discovery/
-  │   ├── discover_org.jl
-  │   ├── discover_registry.jl
-  │   └── generate_audit_lists.jl    
+  ├── main.jl                         
+  ├── utils.jl                        
   ├── audit/
-  │   ├── 01_separate_packages.jl
-  │   ├── 02_audit_packages.jl        
-  │   └── 03_audit_non_packages.jl    
+  │   ├── 01_separate_packages.jl    
+  │   ├── 02_discover_registry.jl        
+  │   ├── 03_audit_packages.jl       
+  │   ├── 04_audit_non_packages.jl    
+  │   ├── 05_audit_contributors.jl    
+  │   └── generate_audit_lists.jl     
   └── visualizations/
       ├── viz_packages.jl             
-      ├── viz_nonpackages.jl          
+      ├── viz_nonpackages.jl
+      ├── viz_contributors.jl         
       └── visualize.jl        
 
 data/
-  ├── baselines/
-  │   ├── org_repositories.csv
-  │   ├── registry_packages.csv
-  │   └── registry_mismatches.csv
   ├── results/
   │   ├── lists/ 
-  │       └── *.txt      
-  │   ├── packages.csv                ← Intermediate 
-  │   ├── non_packages.csv            ← Intermediate 
-  │   ├── audit_packages.csv          ← Final audit output
-  │   └── audit_non_packages.csv      ← Final audit output
+  │       └── *.txt                    
+  │   ├── packages.csv                
+  │   ├── non_packages.csv            
+  │   ├── registry_packages.csv   
+  │   ├── registry_mismatches.csv     
+  │   ├── audit_packages.csv          
+  │   ├── audit_non_packages.csv      
+  │   └── audit_contributors.csv      
   └── visualizations/
       └── *.png                       
 ```
 
-## Maintainer Notes
+## Results
 
-### General Registry Data
-
-The **General Registry** baseline data (`data/baselines/registry_packages.csv`) is **pre-discovered** from the [Julia General Registry](https://github.com/JuliaRegistries/General). This data identifies which JuliaHealth packages are officially registered.
-
-**Important**: The registry data should be **updated periodically** (recommended: quarterly or after major ecosystem changes) to:
-- Capture newly registered packages
-- Track registry status changes
-- Ensure accurate maturity classifications
-
-**To update registry data**:
-```bash
-julia scripts/discovery/discover_registry.jl
-```
-
-This regenerates `data/baselines/registry_packages.csv` with current registry information.
-
-### Registry Mismatches
-
-Some packages may be registered under different names than their repository names. These are tracked in `data/baselines/registry_mismatches.csv` and manually curated as needed. Update this file when discovering new name mismatches during audit runs.
+Browse all charts in [RESULTS.md](RESULTS.md). They are grouped by Packages, Non-Packages and Contributors.

@@ -1,5 +1,4 @@
 # scripts/viz_nonpackages.jl
-# Generate all non-package audit visualizations
 
 # Progress tracking
 viz_counter = Ref(0)
@@ -51,14 +50,10 @@ save("data/visualizations/nonpackages_all_contributors.png")(
 
 # CI/CD ADOPTION (Non-Packages)
 print_progress("Non-Packages CI/CD Adoption")
-np_ci = DataFrame(;
-    status=["With CI/CD", "Without CI/CD"],
-    count=[
-        sum(nonpackages_df.has_ci_workflow),
-        nrow(nonpackages_df) - sum(nonpackages_df.has_ci_workflow),
-    ],
-)
-np_ci.percent = round.(100 .* np_ci.count ./ sum(np_ci.count); digits=1)
+ci_with = sum(nonpackages_df.has_ci_workflow)
+ci_without = nrow(nonpackages_df) - ci_with
+np_ci = DataFrame(; status=["With CI/CD", "Without CI/CD"], count=[ci_with, ci_without])
+np_ci.percent = round.(100 .* np_ci.count ./ nrow(nonpackages_df); digits=1)
 np_ci.label = np_ci.status .* " (" .* string.(np_ci.percent) .* "%)"
 
 save("data/visualizations/nonpackages_ci_adoption.png")(
@@ -81,14 +76,12 @@ save("data/visualizations/nonpackages_ci_adoption.png")(
 
 # LICENSE STATUS (Non-Packages)
 print_progress("Non-Packages License Status")
+license_with = sum(nonpackages_df.has_license)
+license_without = nrow(nonpackages_df) - license_with
 np_license = DataFrame(;
-    status=["Has License", "No License"],
-    count=[
-        sum(nonpackages_df.has_license),
-        nrow(nonpackages_df) - sum(nonpackages_df.has_license),
-    ],
+    status=["Has License", "No License"], count=[license_with, license_without]
 )
-np_license.percent = round.(100 .* np_license.count ./ sum(np_license.count); digits=1)
+np_license.percent = round.(100 .* np_license.count ./ nrow(nonpackages_df); digits=1)
 np_license.label = np_license.status .* " (" .* string.(np_license.percent) .* "%)"
 
 save("data/visualizations/nonpackages_license_status.png")(
@@ -179,4 +172,65 @@ save("data/visualizations/nonpackages_prs_comparison.png")(
     ),
 )
 
-println("\nAll non-package visualizations generated!")
+# LICENSE PRESENCE PERCENTAGE FOR NON-PACKAGES
+print_progress("Non-Package License Presence Percentage")
+np_license_present_count = sum(nonpackages_df.has_license)
+np_license_absent_count = nrow(nonpackages_df) - np_license_present_count
+np_license_percent = round(100 * np_license_present_count / nrow(nonpackages_df); digits=1)
+
+np_license_presence_df = DataFrame(;
+    status=["Licensed", "No License"],
+    count=[np_license_present_count, np_license_absent_count],
+    percent=[np_license_percent, 100.0 - np_license_percent],
+)
+
+save("data/visualizations/nonpackages_license_presence.png")(
+    @vlplot(
+        :bar,
+        x={:percent, title="Percentage of Non-Packages (%)"},
+        y={:status, sort="-x"},
+        color={:status, scale={scheme="greens"}, legend={disable=true}},
+        width=600,
+        height=150,
+        title="Non-Package License Presence: $np_license_percent% have licenses",
+        tooltip=[
+            {field=:status, type="nominal"},
+            {field=:count, type="quantitative"},
+            {field=:percent, type="quantitative", format=".1f"},
+        ]
+    )(
+        np_license_presence_df
+    ),
+)
+
+# LICENSE TYPE DISTRIBUTION FOR NON-PACKAGES
+print_progress("Non-Package License Type Distribution")
+np_license_counts = combine(groupby(nonpackages_df, :license_type), nrow => :count)
+sort!(np_license_counts, :count; rev=true)
+
+# Calculate percentages
+np_license_counts.percent = round.(
+    100 * np_license_counts.count / sum(np_license_counts.count); digits=1
+)
+np_license_counts.label =
+    np_license_counts.license_type .* " (" .* string.(np_license_counts.percent) .* "%)"
+
+save("data/visualizations/nonpackages_license_types.png")(
+    @vlplot(
+        :bar,
+        x={:percent, title="Percentage of Non-Packages (%)"},
+        y={:label, sort="-x"},
+        color={:license_type, scale={scheme="set2"}, legend={title="License Type"}},
+        width=600,
+        height={step=18},
+        title="License Type Distribution Across Non-Packages",
+        tooltip=[
+            {field=:license_type, type="nominal", title="License"},
+            {field=:count, type="quantitative", title="Count"},
+            {field=:percent, type="quantitative", title="Percentage (%)", format=".1f"},
+        ]
+    )(
+        np_license_counts
+    ),
+)
+

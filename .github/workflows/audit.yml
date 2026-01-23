@@ -2,6 +2,8 @@ name: JuliaHealth Ecosystem Audit
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 1 * *"
 
 jobs:
   audit:
@@ -32,9 +34,6 @@ jobs:
 
       - name: Run audit pipeline
         run: julia --project=. scripts/main.jl
-
-      - name: Generate audit lists
-        run: julia --project=. scripts/discovery/generate_audit_lists.jl
 
       - name: Commit and push results
         run: |
