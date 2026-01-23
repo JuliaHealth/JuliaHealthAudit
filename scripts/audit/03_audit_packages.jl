@@ -119,7 +119,7 @@ function audit_package(row, registry_set)
         contributors_count=contributors_count,
         bot_contributors_count=bot_count,
         avg_pr_merge_days=pr_metrics.avg_merge_days,
-        days_since_last_activity=activity.days_since_activity,
+        days_since_last_activity=activity
     )
 end
 

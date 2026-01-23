@@ -75,7 +75,7 @@ function audit_non_package(row)
         all_contributors_list=all_contributors_str,
         has_ci_workflow=has_ci,
         avg_pr_merge_days=pr_metrics.avg_merge_days,
-        days_since_last_activity=activity.days_since_activity,
+        days_since_last_activity=activity
     )
 end
 
