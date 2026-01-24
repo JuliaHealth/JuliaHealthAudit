@@ -6,35 +6,39 @@ Latest automated audit of JuliaHealth packages, non-package repositories, and cr
 
 ### Standards & Structure
 
-**Features in standards compliance chart:**
-
-- **follows_standard_layout** — src, Project.toml, LICENSE required; test/docs/CI/Documenter/coverage recommended
-- **has_ci_workflow** — GitHub Actions workflow present
-- **has_code_coverage** — codecov/codacy config detected or workflow mention
-- **has_docs_dir** — docs/ directory exists
-- **uses_documenter** — docs/make.jl present
-- **has_gh_pages** — gh-pages branch exists (deployed docs)
-- **has_contributing_md** — CONTRIBUTING.md present
-- **has_code_of_conduct** — CODE_OF_CONDUCT.md present
-- **has_license** — LICENSE present
-- **has_project_toml** — Project.toml present
-- **has_src_dir** — src/ present
-- **has_test_dir** — test/ present
-
 ![](data/visualizations/packages_standards_compliance.png)
+
+| Feature | Description |
+|-------|-------------|
+| **follows_standard_layout** | `src/`, `Project.toml`, `LICENSE` required; `test/`, `docs/`, CI, Documenter, and coverage recommended |
+| **has_ci_workflow** | GitHub Actions workflow present |
+| **has_code_coverage** | Code coverage configuration detected (e.g. Codecov/Codacy or workflow mention) |
+| **has_docs_dir** | `docs/` directory exists |
+| **uses_documenter** | `docs/make.jl` present (Documenter.jl setup) |
+| **has_gh_pages** | `gh-pages` branch exists (deployed documentation) |
+| **has_contributing_md** | `CONTRIBUTING.md` present |
+| **has_code_of_conduct** | `CODE_OF_CONDUCT.md` present |
+| **has_license** | `LICENSE` file present |
+| **has_project_toml** | `Project.toml` present |
+| **has_src_dir** | `src/` directory present |
+| **has_test_dir** | `test/` directory present |
 
 **Standards percentages:** shows adoption rates for each standard across all packages.
 
 ![](data/visualizations/packages_standards_percentages.png)
 
 **Style guide:** shows code formatter preference from `.JuliaFormatter.toml` (blue, sciml, default/none, or other). Consistent style improves readability and contribution workflow.
+
 <br>
+
 ![](data/visualizations/packages_style_guide_distribution.png)
 
 ### Registry & Maturity
 
 **General Registry:** the official Julia package index; packages in it can be added via `] add PackageName`. Registry status comes from matching package names (with/without .jl) against the General registry list. Registered packages are discoverable and installable by the wider Julia community.
+
 <br>
+
 ![](data/visualizations/packages_registry_status.png)
 
 **Maturity tiers criteria:**
@@ -55,7 +59,9 @@ Latest automated audit of JuliaHealth packages, non-package repositories, and cr
 ![](data/visualizations/packages_docs_audit_coverage.png)
 
 **GitHub Pages adoption:** fraction of packages with deployed, publicly accessible documentation via gh-pages.
+
 <br>
+
 ![](data/visualizations/packages_github_pages_adoption.png)
 
 **CI status:** shows distribution of packages with vs without CI workflows. CI automatically runs tests on every code change, catching bugs before they reach users.
@@ -63,11 +69,15 @@ Latest automated audit of JuliaHealth packages, non-package repositories, and cr
 ![](data/visualizations/packages_ci_status.png)
 
 **CI adoption:** share of packages with GitHub Actions workflows for automated testing and quality checks.
+
 <br>
+
 ![](data/visualizations/packages_ci_adoption.png)
 
 **Code coverage:** fraction with codecov/codacy config or coverage mentions in workflows. Coverage tracking measures what percentage of code is tested; higher coverage means fewer untested edge cases.
+
 <br>
+
 ![](data/visualizations/packages_code_coverage.png)
 
 ### README Completeness
@@ -129,11 +139,15 @@ Latest automated audit of JuliaHealth packages, non-package repositories, and cr
 ### Repository Status
 
 **Archive status:** archived repos are read-only; indicates the project is no longer maintained or has been superseded.
+
 <br>
+
 ![](data/visualizations/packages_archive_status.png)
 
 **Fork status:** whether repos are forks of other projects. Forks may have different maintenance models than original projects.
+
 <br>
+
 ![](data/visualizations/packages_fork_status.png)
 
 ### Licensing
@@ -163,7 +177,9 @@ Latest automated audit of JuliaHealth packages, non-package repositories, and cr
 ### CI/CD & Licensing
 
 **CI adoption:** fraction of non-package repos with CI workflows. Automation is important for websites, docs, and tools to maintain quality.
+
 <br>
+
 ![](data/visualizations/nonpackages_ci_adoption.png)
 
 **License presence:** percentage of non-packages with explicit LICENSE files.
@@ -171,7 +187,9 @@ Latest automated audit of JuliaHealth packages, non-package repositories, and cr
 ![](data/visualizations/nonpackages_license_presence.png)
 
 **License status:** breakdown of repos with vs without licenses.
+
 <br>
+
 ![](data/visualizations/nonpackages_license_status.png)
 
 **License types:** distribution of open-source licenses used in non-package resources.
