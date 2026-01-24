@@ -9,3 +9,5 @@ JuliaHealthZoo
 MedPipe3DTutorial
 OMOPCDMPredictor
 ObservationalHealthSubecosystemPaper
+juliahealth.github.io
+juliahealth.github.io-previews

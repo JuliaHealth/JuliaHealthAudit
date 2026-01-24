@@ -54,3 +54,5 @@ MedPipe3DTutorial
 OMOPCDMMetrics
 OMOPCDMPredictor
 ObservationalHealthSubecosystemPaper
+juliahealth.github.io
+juliahealth.github.io-previews
