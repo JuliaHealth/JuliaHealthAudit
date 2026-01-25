@@ -45,14 +45,15 @@ for (idx, repo_name) in enumerate(repos)
             isempty(login) && continue
             
             user_type = get(contributor, :type, "User")
-            user_type == "Bot" && continue
+            is_bot = (user_type == "Bot")
             
             contribution_count = get(contributor, :contributions, 0)
             
             if !haskey(contributors, login)
                 contributors[login] = Dict(
                     :contributions => 0,
-                    :repos => Set{String}()
+                    :repos => Set{String}(),
+                    :is_bot => is_bot
                 )
             end
             
@@ -66,6 +67,18 @@ for (idx, repo_name) in enumerate(repos)
 end
 
 println("Building results for $(length(contributors)) contributors..")
+
+function classify_contributor_tier(nrepos::Int, total::Int)
+    if total > 500 || nrepos > 10
+        return "Core"
+    elseif total >= 100 || nrepos >= 3
+        return "Regular"
+    elseif total >= 10 || nrepos >= 1
+        return "Occasional"
+    else
+        return "One-time"
+    end
+end
 
 results = []
 
@@ -86,11 +99,28 @@ for (login, info) in contributors
     repos_contributed = sort(collect(info[:repos]))
     repos_list_str = join(repos_contributed, "; ")
     
+    num_repos = length(repos_contributed)
+    total_contribs = info[:contributions]
+    contributor_tier = classify_contributor_tier(num_repos, total_contribs)
+    is_bot = get(info, :is_bot, false)
+
+    if !isnothing(profile)
+        profile_type = String(get(profile, :type, "User"))
+        if profile_type == "Bot"
+            is_bot = true
+        end
+    end
+    if occursin("Bot", String(login)) || occursin("bot", String(login))
+        is_bot = true
+    end
+    
     push!(results, (
         login=login,
         name=display_name,
-        num_repos_contributed=length(repos_contributed),
-        total_contributions=info[:contributions],
+        num_repos_contributed=num_repos,
+        total_contributions=total_contribs,
+        contributor_tier=contributor_tier,
+        is_bot=is_bot,
         repos_list=repos_list_str
     ))
 end

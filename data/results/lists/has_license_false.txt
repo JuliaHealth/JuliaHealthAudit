@@ -1,7 +1,0 @@
-JuliaHealthEcosystemPaper
-JuliaHealthWebsiteOld
-JuliaHealthZoo
-MedPipe3DTutorial
-ObservationalHealthSubecosystemPaper
-juliahealth.github.io
-juliahealth.github.io-previews

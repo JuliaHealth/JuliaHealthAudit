@@ -1,3 +1,0 @@
-BlindingIndex.jl
-CloToP.jl
-NeuroAnalyzer.jl
