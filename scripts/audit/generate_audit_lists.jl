@@ -86,9 +86,11 @@ function create_categorical_feature_csv(packages_df, nonpackages_df, feature_col
         end
     end
     
-    for cat in categories
-        if !haskey(category_repos, cat)
-            category_repos[cat] = String[]
+    if categories !== nothing
+        for cat in categories
+            if !haskey(category_repos, cat)
+                category_repos[cat] = String[]
+            end
         end
     end
     
