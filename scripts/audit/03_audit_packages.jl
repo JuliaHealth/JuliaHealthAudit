@@ -37,8 +37,9 @@ function audit_package(row, registry_set)
     style_guide = detect_style_guide(owner, repo, tree_paths)
     license_type = get_license_info(owner, repo)
 
-    contributors_count, bot_count = get_contributors_count(owner, repo)
-    all_contributors_str = get_all_contributors_list(owner, repo)
+    human_contributors_list, human_contributors_count, bot_contributors_list, bot_contributors_count = get_all_contributors_list(owner, repo)
+    
+    maintainers_list, maintainers_count, active_maintainers_list, active_maintainers_count = get_maintainers_info(owner, repo)
 
     open_issues, open_prs = get_open_issues_count(owner, repo)
     closed_issues = get_closed_issues_count(owner, repo)
@@ -48,7 +49,11 @@ function audit_package(row, registry_set)
     latest_release_date = get_latest_release_date(owner, repo)
 
     pr_metrics = get_pr_metrics(owner, repo)
-    activity = get_last_activity_date(owner, repo)
+    activity_data = get_last_activity_date(owner, repo)
+    days_since_activity = activity_data.days_since_activity
+    
+    maintenance_status = classify_maintenance_status(maintainers_count, active_maintainers_count, days_since_activity, releases_count)
+    has_active_maintainers = active_maintainers_count > 0
 
     recommended_checks = (
         has_src_dir,
@@ -100,8 +105,10 @@ function audit_package(row, registry_set)
         stars=repo_info.stars,
         open_issues_count=open_issues,
         closed_issues_count=closed_issues,
+        issue_resolution_rate=issue_resolution_rate,
         open_prs_count=open_prs,
         closed_prs_count=closed_prs,
+        pr_resolution_rate=pr_resolution_rate,
         readme_has_code_blocks=readme_info.has_code_blocks,
         readme_line_count=readme_info.readme_size,
         readme_has_install=readme_info.has_install,
@@ -115,11 +122,18 @@ function audit_package(row, registry_set)
         readme_completeness_score=readme_info.completeness_score,
         style_guide_type=style_guide,
         license_type=license_type,
-        all_contributors_list=all_contributors_str,
-        contributors_count=contributors_count,
-        bot_contributors_count=bot_count,
+        human_contributors_list=human_contributors_list,
+        human_contributors_count=human_contributors_count,
+        bot_contributors_list=bot_contributors_list,
+        bot_contributors_count=bot_contributors_count,
+        maintainers_list=maintainers_list,
+        maintainers_count=maintainers_count,
+        active_maintainers_list=active_maintainers_list,
+        active_maintainers_count=active_maintainers_count,
+        has_active_maintainers=has_active_maintainers,
+        maintenance_status=maintenance_status,
         avg_pr_merge_days=pr_metrics.avg_merge_days,
-        days_since_last_activity=activity
+        days_since_last_activity=days_since_activity
     )
 end
 
@@ -134,7 +148,6 @@ function run_audit_packages()
             push!(registry_set, pkg)
             push!(registry_set, replace(pkg, ".jl" => ""))
         end
-        println("Loaded $(length(registry_set)) registry package entries")
     else
         println("Warning: registry_packages.csv not found")
     end

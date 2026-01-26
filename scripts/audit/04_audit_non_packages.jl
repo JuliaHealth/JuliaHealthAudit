@@ -20,8 +20,8 @@ function audit_non_package(row)
     has_license = any(contains.(tree, "LICENSE"))
     license_type = get_license_info(owner, repo)
 
-    contributors_count, bot_count = get_contributors_count(owner, repo)
-    all_contributors_str = get_all_contributors_list(owner, repo)
+    human_contributors_list, human_contributors_count, bot_contributors_list, bot_contributors_count = get_all_contributors_list(owner, repo)
+    maintainers_list, maintainers_count, active_maintainers_list, active_maintainers_count = get_maintainers_info(owner, repo)
 
     open_issues, open_prs = get_open_issues_count(owner, repo)
     closed_issues = get_closed_issues_count(owner, repo)
@@ -43,7 +43,12 @@ function audit_non_package(row)
     readme_info = assess_readme_completeness(readme_content)
 
     pr_metrics = get_pr_metrics(owner, repo)
-    activity = get_last_activity_date(owner, repo)
+    activity_data = get_last_activity_date(owner, repo)
+    days_since_activity = activity_data.days_since_activity
+    
+    # For non-packages, releases_count is assumed 0 (not in registry)
+    maintenance_status = classify_maintenance_status(maintainers_count, active_maintainers_count, days_since_activity, 0)
+    has_active_maintainers = active_maintainers_count > 0
 
     return (
         repo_name=repo_name,
@@ -53,8 +58,6 @@ function audit_non_package(row)
         license_type=license_type,
         pushed_at=repo_info.pushed_at,
         stars=repo_info.stars,
-        contributors_count=contributors_count,
-        bot_contributors_count=bot_count,
         open_issues_count=open_issues,
         closed_issues_count=closed_issues,
         issue_resolution_rate=issue_resolution_rate,
@@ -72,10 +75,19 @@ function audit_non_package(row)
         readme_badges_count=readme_info.badges_count,
         readme_sections_count=readme_info.sections_count,
         readme_completeness_score=readme_info.completeness_score,
-        all_contributors_list=all_contributors_str,
+        human_contributors_list=human_contributors_list,
+        human_contributors_count=human_contributors_count,
+        bot_contributors_list=bot_contributors_list,
+        bot_contributors_count=bot_contributors_count,
+        maintainers_list=maintainers_list,
+        maintainers_count=maintainers_count,
+        active_maintainers_list=active_maintainers_list,
+        active_maintainers_count=active_maintainers_count,
+        has_active_maintainers=has_active_maintainers,
+        maintenance_status=maintenance_status,
         has_ci_workflow=has_ci,
         avg_pr_merge_days=pr_metrics.avg_merge_days,
-        days_since_last_activity=activity
+        days_since_last_activity=days_since_activity
     )
 end
 

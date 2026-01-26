@@ -126,6 +126,23 @@ Latest automated audit of JuliaHealth packages, non-package repositories, and cr
 
 ![](data/visualizations/packages_top_releases.png)
 
+### Maintainers & Maintenance Status
+
+**Maintainers comparison:** all maintainers with push/admin/maintain access vs active maintainers (contributed in last 6 months). Shows team depth and current availability.
+
+![](data/visualizations/packages_maintainers_comparison.png)
+
+**Maintenance status:** distribution of Active/Inactive/Abandoned/Concept packages. Classification based on maintainer activity, release frequency, and commit recency.
+
+| Status | Criteria |
+| --- | --- |
+| **Concept** | Less than 1 release |
+| **Active** | Has active maintainers (contributed in last 6 months) |
+| **Inactive** | Has maintainers but no active ones, last activity < 540 days (~18 months) |
+| **Abandoned** | No maintainers OR last activity ≥ 540 days |
+
+![](data/visualizations/packages_maintenance_status.png)
+
 ### Issues & PRs
 
 **Issues comparison:** open vs closed issue counts across packages. Shows issue triage and maintenance responsiveness.
@@ -206,6 +223,23 @@ Latest automated audit of JuliaHealth packages, non-package repositories, and cr
 
 ![](data/visualizations/nonpackages_prs_comparison.png)
 
+### Maintainers & Maintenance Status
+
+**Maintainers comparison:** all maintainers with push/admin/maintain access vs active maintainers across non-package repositories.
+
+![](data/visualizations/nonpackages_maintainers_comparison.png)
+
+**Maintenance status:** distribution of maintenance states for non-package repos (Active/Inactive/Abandoned/Concept). Helps identify which tools and resources are actively maintained.
+
+| Status | Criteria |
+| --- | --- |
+| **Concept** | Less than 1 release |
+| **Active** | Has active maintainers (contributed in last 6 months) |
+| **Inactive** | Has maintainers but no active ones, last activity < 540 days (~18 months) |
+| **Abandoned** | No maintainers OR last activity ≥ 540 days |
+
+![](data/visualizations/nonpackages_maintenance_status.png)
+
 ## Contributors (Cross-Ecosystem)
 
 **What's measured:** Human contributors across all JuliaHealth repos. `total_contributions` is summed across all repos a person has touched; `num_repos_contributed` counts distinct JuliaHealth repos per contributor. Bots are excluded for cleaner metrics.
@@ -232,4 +266,3 @@ Latest automated audit of JuliaHealth packages, non-package repositories, and cr
 | One-time | a one time contribution |
 
 ![](data/visualizations/contributors_engagement_tiers.png)
-

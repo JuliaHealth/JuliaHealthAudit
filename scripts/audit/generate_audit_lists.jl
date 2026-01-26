@@ -220,7 +220,8 @@ function generate_audit_lists()
         :has_contributing_md,
         :has_code_of_conduct,
         :has_ci_workflow,
-        :has_code_coverage
+        :has_code_coverage,
+        :has_active_maintainers
     ]
     
     for feature in boolean_features
@@ -278,11 +279,84 @@ function generate_audit_lists()
     maturity_output = joinpath(OUTPUT_DIR, "package_maturity.csv")
     CSV.write(maturity_output, maturity_df)
 
-    contributors_output = joinpath(OUTPUT_DIR, "contributors.csv")
+    contributors_output = joinpath(OUTPUT_DIR, "contributors_categories.csv")
     create_contributors_csv(packages, non_packages, contributors_output)
     
     human_bot_output = joinpath(OUTPUT_DIR, "human_bot_contributors.csv")
     create_human_bot_csv(packages, non_packages, human_bot_output)
+
+    create_list_csv(packages, non_packages, "human_contributors_list", "contributors_list.csv")
+    create_list_csv(packages, non_packages, "maintainers_list", "maintainers_list.csv")
+    create_list_csv(packages, non_packages, "active_maintainers_list", "active_maintainers_list.csv")
+    
+    create_maintenance_status_csv(packages, non_packages)
+end
+
+function create_list_csv(packages, non_packages, list_col, output_file)
+    repo_names = String[]
+    lists = String[]
+    
+    for row in eachrow(packages)
+        push!(repo_names, string(row.package_name))
+        val = get(row, Symbol(list_col), "")
+        list_str = ismissing(val) ? "" : string(val)
+        push!(lists, list_str)
+    end
+    
+    for row in eachrow(non_packages)
+        push!(repo_names, string(row.repo_name))
+        val = get(row, Symbol(list_col), "")
+        list_str = ismissing(val) ? "" : string(val)
+        push!(lists, list_str)
+    end
+    
+    list_df = DataFrame(
+        "package_or_repo" => repo_names,
+        list_col => lists
+    )
+    
+    output_path = joinpath(OUTPUT_DIR, output_file)
+    CSV.write(output_path, list_df)
+end
+
+function create_maintenance_status_csv(packages, non_packages)
+    status_repos = Dict{String, Vector{String}}()
+    
+    statuses = ["Active", "Inactive", "Abandoned", "Concept"]
+    for status in statuses
+        status_repos[status] = String[]
+    end
+    
+    for row in eachrow(packages)
+        repo_name = string(row.package_name)
+        status = string(get(row, :maintenance_status, "Abandoned"))
+        if haskey(status_repos, status)
+            push!(status_repos[status], repo_name)
+        end
+    end
+    
+    # Add non-packages
+    for row in eachrow(non_packages)
+        repo_name = string(row.repo_name)
+        status = string(get(row, :maintenance_status, "Abandoned"))
+        if haskey(status_repos, status)
+            push!(status_repos[status], repo_name)
+        end
+    end
+    
+    max_length = maximum(length(repos) for repos in values(status_repos))
+    
+    status_df = DataFrame()
+    for status in statuses
+        repos = status_repos[status]
+        while length(repos) < max_length
+            push!(repos, "")
+        end
+        status_df[!, Symbol(status)] = repos
+    end
+    
+    output_path = joinpath(OUTPUT_DIR, "maintenance_status.csv")
+    CSV.write(output_path, status_df)
 end
 
 generate_audit_lists()

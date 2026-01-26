@@ -26,15 +26,15 @@ save("data/visualizations/nonpackages_all_stars.png")(
 
 # ALL NON-PACKAGES BY CONTRIBUTORS (sorted highest on top)
 print_progress("All Non-Packages by Contributors")
-all_np_contrib = sort(nonpackages_df, :contributors_count; rev=true)[
-    :, [:repo_name, :contributors_count]
+all_np_contrib = sort(nonpackages_df, :human_contributors_count; rev=true)[
+    :, [:repo_name, :human_contributors_count]
 ]
 save("data/visualizations/nonpackages_all_contributors.png")(
     @vlplot(
         :bar,
-        x=:contributors_count,
+        x=:human_contributors_count,
         y={:repo_name, sort="-x"},
-        color=:contributors_count,
+        color=:human_contributors_count,
         width=700,
         height={step=18},
         title="Non-Packages by Contributors"
@@ -200,4 +200,53 @@ save("data/visualizations/nonpackages_license_types.png")(
     ),
 )
 
+# MAINTAINERS vs ACTIVE MAINTAINERS (Non-Packages)
+print_progress("Non-Packages Maintainers vs Active Maintainers")
+np_top_maintainers = sort(nonpackages_df, :maintainers_count; rev=true)[
+    :, [:repo_name, :maintainers_count, :active_maintainers_count]
+]
 
+np_maintainers_long = DataFrame()
+for row in eachrow(np_top_maintainers)
+    push!(
+        np_maintainers_long,
+        (repo_name=row.repo_name, status="All Maintainers", count=row.maintainers_count),
+    )
+    push!(
+        np_maintainers_long,
+        (repo_name=row.repo_name, status="Active (6mo)", count=row.active_maintainers_count),
+    )
+end
+save("data/visualizations/nonpackages_maintainers_comparison.png")(
+    @vlplot(
+        :bar,
+        x=:count,
+        y={:repo_name, sort="-x"},
+        color=:status,
+        width=750,
+        height={step=18},
+        title="Non-Packages: All Maintainers vs Active Maintainers"
+    )(
+        np_maintainers_long
+    ),
+)
+
+# MAINTENANCE STATUS DISTRIBUTION (Non-Packages)
+print_progress("Non-Packages Maintenance Status Distribution")
+np_status_counts = combine(groupby(nonpackages_df, :maintenance_status), nrow => :count)
+
+save("data/visualizations/nonpackages_maintenance_status.png")(
+    @vlplot(
+        :bar,
+        x={:count, axis={title="Number of Non-Packages"}},
+        y={:maintenance_status, sort="-x"},
+        color={value="#ff7f0e"},
+        width=700,
+        height=250,
+        title="Non-Packages Maintenance Status Distribution"
+    )(
+        np_status_counts
+    ),
+)
+
+println("\nNon-package visualizations complete!")

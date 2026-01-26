@@ -12,8 +12,7 @@ const GITHUB_API = "https://api.github.com"
 """
     load_env_vars()
 
-Load environment variables from .env file in project root.
-Ensures GITHUB_TOKEN is available for all scripts.
+Load GITHUB_TOKEN from .env file.
 """
 function load_env_vars()
     DotEnv.load!()
@@ -40,7 +39,7 @@ end
 """
     github_request(endpoint)
 
-Make authenticated GitHub API request.
+Make authenticated API request to GitHub.
 """
 function github_request(endpoint)
     headers = [
@@ -57,7 +56,7 @@ end
 """
     get_repo_info(owner, repo)
 
-Fetch basic repository information from GitHub API.
+Get basic repo info from GitHub.
 """
 function get_repo_info(owner, repo)
     data = github_request("/repos/$owner/$repo")
@@ -75,7 +74,7 @@ end
 """
     get_tree(owner, repo, branch)
 
-Get repository file tree recursively.
+Get file tree recursively.
 """
 function get_tree(owner, repo, branch)
     data = github_request("/repos/$owner/$repo/git/trees/$branch?recursive=1")
@@ -83,6 +82,112 @@ function get_tree(owner, repo, branch)
 
     tree = get(data, :tree, [])
     return [String(item.path) for item in tree]
+end
+
+"""
+    classify_maintenance_status(maintainers_count, active_maintainers_count, days_since_activity, releases_count)
+
+Figure out if a repo is actively maintained based on maintainer activity and releases.
+"""
+function classify_maintenance_status(maintainers_count::Int, active_maintainers_count::Int, days_since_activity, releases_count::Int)
+    days = ismissing(days_since_activity) ? Inf : days_since_activity
+    
+    if releases_count < 1
+        return "Concept"
+    end
+
+    if active_maintainers_count > 0
+        return "Active"
+    end
+
+    if maintainers_count > 0
+        if days < 540  
+            return "Inactive"
+        else  
+            return "Abandoned"
+        end
+    end
+
+    return "Abandoned"
+end
+
+"""
+    get_maintainers_info(owner, repo)
+
+Find people with push access who committed in the last 1-10 years.
+Also tracks who was active in last 6 months.
+"""
+function get_maintainers_info(owner, repo)
+    maintainers = String[]
+    active_maintainers = String[]
+    six_months_ago = Dates.now() - Dates.Month(6)
+    
+    for years_back in 1:10
+        since_date = Dates.format(Dates.now() - Dates.Year(years_back), "yyyy-mm-dd")
+        commits_endpoint = "/repos/$owner/$repo/commits?since=$since_date&per_page=100"
+        
+        committers = Set{String}()
+        committers_with_dates = Dict{String, DateTime}()
+        
+        data = github_request(commits_endpoint)
+        if !isnothing(data) && !isempty(data)
+            for commit in data
+                commit_date_str = get(get(commit, :commit, Dict()), :author, Dict())[:date]
+                commit_date = DateTime(commit_date_str[1:19], "yyyy-mm-ddTHH:MM:SS")
+
+                for key in (:author, :committer)
+                    person = get(commit, key, nothing)
+                    if !isnothing(person) && haskey(person, :login)
+                        login = String(person.login)
+                        login_lower = lowercase(login)
+                        if !occursin("bot", login_lower) && login_lower != lowercase(owner) && login_lower ∉ ("web-flow", "renovate")
+                            push!(committers, login)
+                            if !haskey(committers_with_dates, login) || commit_date > committers_with_dates[login]
+                                committers_with_dates[login] = commit_date
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        
+        if !isempty(committers)
+            collab_data = github_request("/repos/$owner/$repo/collaborators")
+            if !isnothing(collab_data)
+                for person_login in committers
+                    for collaborator in collab_data
+                        if String(collaborator.login) == person_login
+                            permission = get(collaborator, :permissions, nothing)
+                            if !isnothing(permission)
+                                if get(permission, :push, false) || get(permission, :admin, false) || get(permission, :maintain, false)
+                                    push!(maintainers, person_login)
+                                    if haskey(committers_with_dates, person_login) && committers_with_dates[person_login] >= six_months_ago
+                                        push!(active_maintainers, person_login)
+                                    end
+                                end
+                            end
+                            break
+                        end
+                    end
+                end
+            else
+                # Can't verify permissions - trust the committers we found
+                maintainers = collect(committers)
+                for (login, last_commit) in committers_with_dates
+                    if last_commit >= six_months_ago
+                        push!(active_maintainers, login)
+                    end
+                end
+            end
+            if !isempty(maintainers)
+                break
+            end
+        end
+    end
+    
+    all_list = isempty(maintainers) ? "" : join(sort(unique(maintainers)), "; ")
+    active_list = isempty(active_maintainers) ? "" : join(sort(unique(active_maintainers)), "; ")
+    return (all_list, length(unique(maintainers)), active_list, length(unique(active_maintainers)))
 end
 
 """
@@ -101,44 +206,9 @@ function get_readme_content(owner, repo)
 end
 
 """
-    get_contributors_count(owner, repo)
-
-Count total contributors by paginating through all pages.
-Returns (human_count, bot_count).
-Bots are identified by type="Bot" in GitHub API response.
-"""
-function get_contributors_count(owner, repo)
-    try
-        all_contributors = []
-        page = 1
-        per_page = 100
-
-        while true
-            data = github_request(
-                "/repos/$owner/$repo/contributors?per_page=$per_page&page=$page"
-            )
-            isnothing(data) && break
-            isempty(data) && break
-
-            append!(all_contributors, data)
-
-            length(data) < per_page && break
-            page += 1
-        end
-
-        human_count = sum(1 for contrib in all_contributors if get(contrib, :type, "User") != "Bot")
-        bot_count = length(all_contributors) - human_count
-        
-        return human_count, bot_count
-    catch e
-        return 0, 0
-    end
-end
-
-"""
     get_all_contributors_list(owner, repo)
 
-Get all contributors as a semicolon-separated string.
+Get human and bot contributors separately.
 """
 function get_all_contributors_list(owner, repo)
     try
@@ -147,35 +217,46 @@ function get_all_contributors_list(owner, repo)
         per_page = 100
 
         while true
-            data = github_request(
-                "/repos/$owner/$repo/contributors?per_page=$per_page&page=$page"
-            )
+            data = github_request("/repos/$owner/$repo/contributors?per_page=$per_page&page=$page")
             isnothing(data) && break
             isempty(data) && break
-
             append!(all_contributors, data)
-
             length(data) < per_page && break
             page += 1
         end
 
-        human_contributors = [
-            get(c, :login, "")
-            for c in all_contributors
-            if get(c, :type, "User") != "Bot" && !isempty(get(c, :login, ""))
-        ]
+        humans = []
+        bots = []
         
-        return join(human_contributors, "; ")
+        for c in all_contributors
+            login = get(c, :login, "")
+            isempty(login) && continue
+            
+            api_type = get(c, :type, "User")
+            login_lower = lowercase(login)
+            
+            is_bot = (api_type == "Bot") || occursin("bot", login_lower) || occursin("[bot]", login_lower)
+            
+            if is_bot
+                push!(bots, login)
+            else
+                push!(humans, login)
+            end
+        end
+        
+        human_list = isempty(humans) ? "" : join(humans, "; ")
+        bot_list = isempty(bots) ? "" : join(bots, "; ")
+        
+        return (human_list, length(humans), bot_list, length(bots))
     catch e
-        return ""
+        return ("", 0, "", 0)
     end
 end
 
 """
     get_open_issues_count(owner, repo)
 
-Get count of open issues and PRs separately (GitHub API includes PRs in issues).
-Returns (issues_count, prs_count).
+Count open issues and PRs separately.
 """
 function get_open_issues_count(owner, repo)
     try
@@ -184,22 +265,18 @@ function get_open_issues_count(owner, repo)
         per_page = 100
 
         while true
-            data = github_request(
-                "/repos/$owner/$repo/issues?state=open&per_page=$per_page&page=$page"
-            )
+            data = github_request("/repos/$owner/$repo/issues?state=open&per_page=$per_page&page=$page")
             isnothing(data) && break
             isempty(data) && break
-
             append!(all_issues, data)
-
             length(data) < per_page && break
             page += 1
         end
 
-        actual_issues = filter(item -> !haskey(item, :pull_request), all_issues)
-        actual_prs = filter(item -> haskey(item, :pull_request), all_issues)
+        issues = filter(item -> !haskey(item, :pull_request), all_issues)
+        prs = filter(item -> haskey(item, :pull_request), all_issues)
 
-        return length(actual_issues), length(actual_prs)
+        return length(issues), length(prs)
     catch e
         return 0, 0
     end
@@ -208,7 +285,7 @@ end
 """
     get_closed_issues_count(owner, repo)
 
-Get count of closed issues (excluding PRs).
+Count closed issues (not PRs).
 """
 function get_closed_issues_count(owner, repo)
     try
@@ -217,20 +294,16 @@ function get_closed_issues_count(owner, repo)
         per_page = 100
 
         while true
-            data = github_request(
-                "/repos/$owner/$repo/issues?state=closed&per_page=$per_page&page=$page"
-            )
+            data = github_request("/repos/$owner/$repo/issues?state=closed&per_page=$per_page&page=$page")
             isnothing(data) && break
             isempty(data) && break
-
             append!(all_issues, data)
-
             length(data) < per_page && break
             page += 1
         end
 
-        actual_issues = filter(item -> !haskey(item, :pull_request), all_issues)
-        return length(actual_issues)
+        issues = filter(item -> !haskey(item, :pull_request), all_issues)
+        return length(issues)
     catch e
         return 0
     end
@@ -239,7 +312,7 @@ end
 """
     get_closed_prs_count(owner, repo)
 
-Get count of closed/merged PRs.
+Count closed/merged PRs.
 """
 function get_closed_prs_count(owner, repo)
     try
@@ -248,14 +321,10 @@ function get_closed_prs_count(owner, repo)
         per_page = 100
 
         while true
-            data = github_request(
-                "/repos/$owner/$repo/pulls?state=closed&per_page=$per_page&page=$page"
-            )
+            data = github_request("/repos/$owner/$repo/pulls?state=closed&per_page=$per_page&page=$page")
             isnothing(data) && break
             isempty(data) && break
-
             append!(all_prs, data)
-
             length(data) < per_page && break
             page += 1
         end
@@ -304,10 +373,7 @@ end
 """
     has_code_coverage(owner, repo, tree_paths)
 
-Check if repository has code coverage configuration.
-Detects:
-  - Standalone config files: .codecov, codecov.yml, .codacy
-  - Codecov in workflow files
+Check for code coverage config (standalone files or in workflows).
 """
 function has_code_coverage(owner, repo, tree_paths)
     has_standalone = any(p -> startswith(p, ".codecov") || startswith(p, "codecov.yml") || startswith(p, ".codacy"), tree_paths)
@@ -338,8 +404,7 @@ end
 """
     detect_style_guide(owner, repo, tree_paths)
 
-Detect code style guide (reads actual style from .JuliaFormatter.toml).
-Returns style name like "blue", "sciml" or "none".
+Read style from .JuliaFormatter.toml if it exists.
 """
 function detect_style_guide(owner, repo, tree_paths)
     if any(p -> p == ".JuliaFormatter.toml", tree_paths)
@@ -366,8 +431,7 @@ end
 """
     get_license_info(owner, repo)
 
-Fetch license information from GitHub API.
-Returns license SPDX ID (e.g., "MIT", "Apache-2.0", "BSD-3-Clause") or "Unknown".
+Get license from GitHub API.
 """
 function get_license_info(owner, repo)
     data = github_request("/repos/$owner/$repo")
@@ -518,47 +582,46 @@ end
 """
     get_last_activity_date(org, repo)
 
-Return days since last activity and an identifier for the primary actor
-based on recent repository events; falls back to latest commit info.
+Get days since last activity from recent events or commits.
+Returns NamedTuple with days_since_activity field.
 """
 function get_last_activity_date(org, repo)
     days_since = missing
 
-    events_data = github_request("/repos/$org/$repo/events?per_page=100")
-    if !isnothing(events_data) && !isempty(events_data)
-        last_event = events_data[1]
-        created_at_str = get(last_event, :created_at, "")
-        if !isempty(created_at_str)
-            try
-                last_activity = DateTime(string(created_at_str)[1:end-1])
-                now_utc = now(UTC)
-                days_since = Dates.value(now_utc - last_activity) / (1000 * 60 * 60 * 24)
-
-            catch
-            end
-        end
-    end
-
-    if ismissing(days_since)
-        commits_data = github_request("/repos/$org/$repo/commits?per_page=1")
-        if !isnothing(commits_data) && !isempty(commits_data)
-            commit = commits_data[1]
-            commit_info = get(commit, :commit, Dict())
-            committer = get(commit_info, :committer, Dict())
-            date_str = get(committer, :date, "")
-            if !isempty(date_str)
+    try
+        events_data = github_request("/repos/$org/$repo/events?per_page=100")
+        if !isnothing(events_data) && !isempty(events_data)
+            last_event = events_data[1]
+            created_at_str = get(last_event, :created_at, "")
+            if !isempty(created_at_str)
                 try
-                    last_activity = DateTime(string(date_str)[1:end-1])
+                    last_activity = DateTime(string(created_at_str)[1:end-1])
                     now_utc = now(UTC)
                     days_since = Dates.value(now_utc - last_activity) / (1000 * 60 * 60 * 24)
-
                 catch
                 end
             end
         end
+    catch
     end
 
-    return (
-        days_since_activity=days_since
-    )
+    if ismissing(days_since)
+        try
+            commits_data = github_request("/repos/$org/$repo/commits?per_page=1")
+            if !isnothing(commits_data) && !isempty(commits_data)
+                commit = commits_data[1]
+                commit_info = get(commit, :commit, Dict())
+                committer = get(commit_info, :committer, Dict())
+                date_str = get(committer, :date, "")
+                if !isempty(date_str)
+                    last_activity = DateTime(string(date_str)[1:end-1])
+                    now_utc = now(UTC)
+                    days_since = Dates.value(now_utc - last_activity) / (1000 * 60 * 60 * 24)
+                end
+            end
+        catch
+        end
+    end
+
+    return (days_since_activity=days_since,)
 end

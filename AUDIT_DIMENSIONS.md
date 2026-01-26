@@ -52,6 +52,12 @@
 | readme_completeness_score | Integer | Completeness score (0–8)                     |
 | avg_pr_merge_days         | Float   | Average PR merge time (days)                 |
 | days_since_last_activity  | Float   | Days since last repo activity                |
+| maintainers_list          | String  | Semicolon-separated maintainer logins        |
+| maintainers_count         | Integer | Total maintainers (push/admin/maintain)      |
+| active_maintainers_list   | String  | Semicolon-separated active maintainers      |
+| active_maintainers_count  | Integer | Maintainers active in last 6 months          |
+| has_active_maintainers    | Boolean | At least one active maintainer present       |
+| maintenance_status        | String  | Active/Inactive/Abandoned/Concept|
 
 ## Non-Packages Audit (`04_audit_non_packages.jl`)
 
@@ -90,6 +96,12 @@
 | readme_completeness_score | Integer | Completeness score (0–8)   |
 | avg_pr_merge_days         | Float   | Average PR merge time (days) |
 | days_since_last_activity  | Float   | Days since last repo activity |
+| maintainers_list          | String  | Semicolon-separated maintainer logins|
+| maintainers_count         | Integer | Total maintainers (push/admin/maintain)|
+| active_maintainers_list   | String  | Semicolon-separated active maintainers |
+| active_maintainers_count  | Integer | Maintainers active in last 6 months |
+| has_active_maintainers    | Boolean | At least one active maintainer  |
+| maintenance_status        | String  | Active/Inactive/Abandoned/Concept |
 
 ## Contributors Summary (`05_audit_contributors.jl`)
 

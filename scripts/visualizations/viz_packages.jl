@@ -121,13 +121,13 @@ save("data/visualizations/packages_top15_stars.png")(
 
 # TOP 15 BY CONTRIBUTORS
 print_progress("Top 15 Packages by Contributors")
-top_contrib = sort(packages_df, :contributors_count; rev=true)[
-    1:15, [:package_name, :contributors_count]
+top_contrib = sort(packages_df, :human_contributors_count; rev=true)[
+    1:15, [:package_name, :human_contributors_count]
 ]
 save("data/visualizations/packages_top15_contributors.png")(
     @vlplot(
         :bar,
-        x="contributors_count:q",
+        x="human_contributors_count:q",
         y={:package_name, sort="-x"},
         width=700,
         height={step=20},
@@ -222,7 +222,7 @@ print_progress("Contributors Distribution Histogram")
 save("data/visualizations/packages_contributors_distribution.png")(
     @vlplot(
         :bar,
-        x="contributors_count:q",
+        x="human_contributors_count:q",
         y="count()",
         width=500,
         height=300,
@@ -605,6 +605,55 @@ if nrow(activity_data) > 0
         ),
     )
 end
+
+# MAINTAINERS vs ACTIVE MAINTAINERS (Top 15)
+print_progress("Maintainers vs Active Maintainers Comparison")
+top_maintainers = sort(packages_df, :maintainers_count; rev=true)[
+    1:15, [:package_name, :maintainers_count, :active_maintainers_count]
+]
+
+maintainers_long = DataFrame()
+for row in eachrow(top_maintainers)
+    push!(
+        maintainers_long,
+        (package_name=row.package_name, status="All Maintainers", count=row.maintainers_count),
+    )
+    push!(
+        maintainers_long,
+        (package_name=row.package_name, status="Active (6mo)", count=row.active_maintainers_count),
+    )
+end
+save("data/visualizations/packages_maintainers_comparison.png")(
+    @vlplot(
+        :bar,
+        x=:count,
+        y={:package_name, sort="-x"},
+        color=:status,
+        width=750,
+        height={step=18},
+        title="Top 15 Packages: All Maintainers vs Active Maintainers"
+    )(
+        maintainers_long
+    ),
+)
+
+# MAINTENANCE STATUS DISTRIBUTION
+print_progress("Maintenance Status Distribution")
+status_counts = combine(groupby(packages_df, :maintenance_status), nrow => :count)
+
+save("data/visualizations/packages_maintenance_status.png")(
+    @vlplot(
+        :bar,
+        x={:count, axis={title="Number of Packages"}},
+        y={:maintenance_status, sort="-x"},
+        color={value="#1f77b4"},
+        width=700,
+        height=250,
+        title="Package Maintenance Status Distribution"
+    )(
+        status_counts
+    ),
+)
 
 println("\nPackage visualizations complete!")
 
