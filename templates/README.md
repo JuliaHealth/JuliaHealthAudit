@@ -58,7 +58,3 @@ Package health, revival, and succession planning
 ### [06_PACKAGE_CHECKLIST.md](06_PACKAGE_CHECKLIST.md)
 Comprehensive checklists for new and existing packages
 
-## Examples
-
-**JuliaHealth packages following best practices:**
-- [KomaMRI.jl](https://github.com/JuliaHealth/KomaMRI.jl) - Monorepo with Blue style

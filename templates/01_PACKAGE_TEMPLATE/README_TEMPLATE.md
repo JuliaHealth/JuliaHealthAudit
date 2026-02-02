@@ -1,6 +1,5 @@
 # PackageName.jl
 
-[![Build Status](https://github.com/JuliaHealth/PackageName.jl/workflows/CI/badge.svg)](https://github.com/JuliaHealth/PackageName.jl/actions)
 [![Coverage](https://codecov.io/gh/JuliaHealth/PackageName.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/JuliaHealth/PackageName.jl)
 [![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliahealth.org/PackageName.jl/stable/)
 [![License](https://img.shields.io/github/license/JuliaHealth/PackageName.jl)](LICENSE)
@@ -107,8 +106,8 @@ Quick links:
 
 ## Community
 
-- **Slack**: [#health-and-medicine](https://julialang.slack.com/archives/C6LDNV35T) on Julia Slack
-- **Discourse**: [JuliaHealth category](https://discourse.julialang.org/c/domain/health)
+- **Slack**: #health-and-medicine at julialang.slack.com
+- **Discourse**: [JuliaHealth category](https://discourse.julialang.org)
 - **GitHub Discussions**: [Discussions](https://github.com/JuliaHealth/PackageName.jl/discussions)
 
 Please follow our [Code of Conduct](CODE_OF_CONDUCT.md) in all interactions.
@@ -138,18 +137,3 @@ This work was supported by [funding source]. Special thanks to [contributors/org
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## README Completeness Score: 8/8 ✅
-
-This template achieves a perfect score by including all essential elements:
-
-- **Installation instructions** - Clear steps for adding the package
-- **Usage/Examples** - Working code examples with explanations
-- **Contributing guidance** - Links to CONTRIBUTING.md and issue templates
-- **Lists** - Features, related packages, acknowledgements
-- **Links** - Documentation, community channels, issue tracker
-- **Code blocks** - Multiple Julia examples demonstrating usage
-- **Badges** - Build status, coverage, docs, license
-- **Section headers** - Well-organized structure with clear navigation

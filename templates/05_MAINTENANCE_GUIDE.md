@@ -246,7 +246,7 @@ Use these CSV files to assess package health:
 ## Getting Help
 
 - **GitHub Discussions**: Ask questions in [Discussions](https://github.com/JuliaHealth/PackageName.jl/discussions)
-- **Julia Slack**: Join **#health-and-medicine**
+- **Slack**: Join #health-and-medicine at julialang.slack.com
 - **Julia Discourse**: Post in [JuliaHealth category](https://discourse.julialang.org/)
 
 **Remember:** It's okay to step back from maintenance. The most important thing is clear communication with users and contributors.

@@ -244,15 +244,14 @@ Use this to bring an existing package up to JuliaHealth standards.
 ## Resources
 
 - **JuliaHealth Audit:** Review your package's metrics in `data/results/audit_packages.csv`
-- **PkgTemplates.jl:** Automated package generation
-- 
+- **PkgTemplates.jl:**/**BestieTemplates.jl** Automated package generation
 - **Documenter.jl:** Documentation framework
 - **JuliaFormatter.jl:** Code formatting tool
 
 ## Getting Help
 
 - **GitHub Discussions**: Ask questions in [Discussions](https://github.com/JuliaHealth/PackageName.jl/discussions)
-- **Julia Slack**: Join **#health-and-medicine**
+- **Slack**: Join #health-and-medicine at julialang.slack.com
 - **Julia Discourse**: Post in [JuliaHealth category](https://discourse.julialang.org/)
 
 
