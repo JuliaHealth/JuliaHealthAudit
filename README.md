@@ -85,7 +85,7 @@ scripts/
 data/
   ├── results/
   │   ├── lists/ 
-  │       └── *.txt                    
+  │       └── *.csv                    
   │   ├── packages.csv                
   │   ├── non_packages.csv            
   │   ├── registry_packages.csv   

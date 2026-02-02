@@ -1,0 +1,23 @@
+name: Format Check
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: '1'
+      
+      - name: Install JuliaFormatter
+        run: julia -e 'using Pkg; Pkg.add("JuliaFormatter")'
+      
+      - name: Check formatting
+        run: |
+          julia -e 'using JuliaFormatter; format("."; verbose=true) || error("Formatting check failed")'
+          git diff --exit-code || (echo "Code is not formatted. Run JuliaFormatter.format(\".\") locally." && exit 1)
