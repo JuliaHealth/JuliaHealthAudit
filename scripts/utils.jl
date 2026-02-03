@@ -206,6 +206,42 @@ function get_readme_content(owner, repo)
 end
 
 """
+    get_package_downloads(package_name)
+
+Fetch monthly and total downloads from juliapkgstats.com API.
+Returns (monthly_downloads, total_downloads). Returns (0, 0) if package not found.
+"""
+function get_package_downloads(package_name)
+    try
+        pkg_clean = replace(package_name, ".jl" => "")
+        
+        monthly_url = "https://juliapkgstats.com/api/v1/monthly_downloads/$pkg_clean"
+        monthly_response = HTTP.get(monthly_url; status_exception=false)
+        
+        if monthly_response.status == 200
+            monthly_data = JSON3.read(String(monthly_response.body))
+            monthly_downloads = get(monthly_data, :monthly_downloads, 0)
+        else
+            return (0, 0) 
+        end
+        
+        total_url = "https://juliapkgstats.com/api/v1/total_downloads/$pkg_clean"
+        total_response = HTTP.get(total_url; status_exception=false)
+        
+        if total_response.status == 200
+            total_data = JSON3.read(String(total_response.body))
+            total_downloads = get(total_data, :total_downloads, 0)
+        else
+            total_downloads = 0
+        end
+        
+        return (monthly_downloads, total_downloads)
+    catch e
+        return (0, 0)  
+    end
+end
+
+"""
     get_all_contributors_list(owner, repo)
 
 Get human and bot contributors separately.

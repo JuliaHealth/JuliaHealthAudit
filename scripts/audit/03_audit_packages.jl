@@ -55,6 +55,8 @@ function audit_package(row, registry_set)
     maintenance_status = classify_maintenance_status(maintainers_count, active_maintainers_count, days_since_activity, releases_count)
     has_active_maintainers = active_maintainers_count > 0
 
+    monthly_downloads, total_downloads = get_package_downloads(pkg_name)
+
     recommended_checks = (
         has_src_dir,
         has_project_toml,
@@ -103,6 +105,8 @@ function audit_package(row, registry_set)
         latest_release_date=latest_release_date,
         pushed_at=isempty(repo_info.pushed_at) ? missing : repo_info.pushed_at,
         stars=repo_info.stars,
+        monthly_downloads=monthly_downloads,
+        total_downloads=total_downloads,
         open_issues_count=open_issues,
         closed_issues_count=closed_issues,
         issue_resolution_rate=issue_resolution_rate,
