@@ -121,7 +121,7 @@ save("data/visualizations/packages_top15_stars.png")(
 
 
 # TOP 15 BY MONTHLY DOWNLOADS
-rint_progress("Top 15 Packages by Monthly Downloads")
+print_progress("Top 15 Packages by Monthly Downloads")
 top_monthly_downloads = sort(packages_df, :monthly_downloads; rev=true)[
     1:15, [:package_name, :monthly_downloads]
 ]
