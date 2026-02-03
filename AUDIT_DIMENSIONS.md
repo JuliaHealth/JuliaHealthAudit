@@ -31,6 +31,8 @@
 | latest_release_date       | Date    | Date of latest release                       |
 | pushed_at                 | Date    | Last push date                               |
 | stars                     | Integer | GitHub stars                                 |
+| monthly_downloads         | Integer | Monthly downloads (JuliaPkgStats API)        |
+| total_downloads           | Integer | Total downloads (JuliaPkgStats API)     |
 | contributors_count        | Integer | Human contributors only                      |
 | bot_contributors_count    | Integer | Bot contributors only                        |
 | open_issues_count         | Integer | Open issues (excluding PRs)                  |

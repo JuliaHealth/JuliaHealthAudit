@@ -118,6 +118,14 @@ Latest automated audit of JuliaHealth packages, non-package repositories, and cr
 
 ![](data/visualizations/packages_top15_stars.png)
 
+**Top 15 by monthly downloads:** most downloaded packages in the last 30 days.
+
+![](data/visualizations/packages_top15_monthly_downloads.png)
+
+**Top 15 by total downloads:** most downloaded packages all-time.
+
+![](data/visualizations/packages_top15_total_downloads.png)
+
 **Top 15 by contributors:** packages with the largest human contributor bases, indicating strong community engagement.
 
 ![](data/visualizations/packages_top15_contributors.png)

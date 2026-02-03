@@ -119,6 +119,43 @@ save("data/visualizations/packages_top15_stars.png")(
     ),
 )
 
+
+# TOP 15 BY MONTHLY DOWNLOADS
+rint_progress("Top 15 Packages by Monthly Downloads")
+top_monthly_downloads = sort(packages_df, :monthly_downloads; rev=true)[
+    1:15, [:package_name, :monthly_downloads]
+]
+save("data/visualizations/packages_top15_monthly_downloads.png")(
+@vlplot(
+    :bar,
+    x="monthly_downloads:q",
+    y={:package_name, sort="-x"},
+    width=700,
+    height={step=20},
+    title="Top 15 Packages by Monthly Downloads"
+    )(
+        top_monthly_downloads
+    ),
+)
+
+# TOP 15 BY TOTAL DOWNLOADS
+print_progress("Top 15 Packages by Total Downloads")
+top_total_downloads = sort(packages_df, :total_downloads; rev=true)[
+    1:15, [:package_name, :total_downloads]
+]
+save("data/visualizations/packages_top15_total_downloads.png")(
+@vlplot(
+    :bar,
+    x="total_downloads:q",
+    y={:package_name, sort="-x"},
+    width=700,
+    height={step=20},
+    title="Top 15 Packages by Total Downloads"
+    )(
+        top_total_downloads
+    ),
+)
+
 # TOP 15 BY CONTRIBUTORS
 print_progress("Top 15 Packages by Contributors")
 top_contrib = sort(packages_df, :human_contributors_count; rev=true)[
