@@ -27,7 +27,7 @@ ITKIOWrapp.jl,
 ITKIOWrapper.jl,
 KomaMRI.jl,KookiesNKareem; Stockless; aTrotier; cncastillo; nHackel; pvillacorta; thePlasm
 MTIWrapper.jl,
-MedEval3D.jl,ParamThakkar123; jakubMitura14
+MedEval3D.jl,
 MedEye3d.jl,
 MedImages.jl,divital-coder; jakubMitura14
 MedPipe3D.jl,
@@ -49,7 +49,7 @@ Thunderbolt.jl,oscardssmith; termi-official
 WrapperITKIO.jl,
 EpiJ,
 JuliaHealthAudit,kosuri-indu
-JuliaHealthEcosystemPaper,TheCedarPrince
+JuliaHealthEcosystemPaper,TheCedarPrince; kosuri-indu
 JuliaHealthLLM,ParamThakkar123; TheCedarPrince
 JuliaHealthWebsiteOld,
 JuliaHealthZoo,
