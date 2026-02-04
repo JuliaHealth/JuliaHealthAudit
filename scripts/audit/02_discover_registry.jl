@@ -73,6 +73,14 @@ for package_name in juliahealth_packages
 
     if fetch_success
         is_juliahealth_org = is_juliahealth_url(repo_url)
+        
+        owner, repo = parse_repo_url("https://github.com/JuliaHealth/$package_name.jl")
+        repo_info = get_repo_info(owner, repo)
+        
+        if !isnothing(repo_info) && repo_info.is_fork
+            continue
+        end
+        
         push!(
             registry_packages, (package_name, registry_path, repo_url, is_juliahealth_org)
         )
@@ -97,4 +105,3 @@ println("\nRegistry discovery complete:")
 println("Found $(nrow(registry_packages)) JuliaHealth packages in registry")
 println("Mismatches Found in $(nrow(mismatch_packages)) JuliaHealth packages in registry")
 println("Saved to: $REGISTRY_PACKAGES_OUTPUT")
-
