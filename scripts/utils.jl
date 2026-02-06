@@ -171,7 +171,6 @@ function get_maintainers_info(owner, repo)
                     end
                 end
             else
-                # Can't verify permissions - trust the committers we found
                 maintainers = collect(committers)
                 for (login, last_commit) in committers_with_dates
                     if last_commit >= six_months_ago
@@ -209,6 +208,7 @@ end
     get_package_downloads(package_name)
 
 Fetch monthly and total downloads from juliapkgstats.com API.
+The API returns 'total_requests' field (as string with commas).
 Returns (monthly_downloads, total_downloads). Returns (0, 0) if package not found.
 """
 function get_package_downloads(package_name)
@@ -220,7 +220,8 @@ function get_package_downloads(package_name)
         
         if monthly_response.status == 200
             monthly_data = JSON3.read(String(monthly_response.body))
-            monthly_downloads = get(monthly_data, :monthly_downloads, 0)
+            monthly_str = get(monthly_data, :total_requests, "0")
+            monthly_downloads = parse(Int, replace(string(monthly_str), "," => ""))
         else
             return (0, 0) 
         end
@@ -230,7 +231,8 @@ function get_package_downloads(package_name)
         
         if total_response.status == 200
             total_data = JSON3.read(String(total_response.body))
-            total_downloads = get(total_data, :total_downloads, 0)
+            total_str = get(total_data, :total_requests, "0")
+            total_downloads = parse(Int, replace(string(total_str), "," => ""))
         else
             total_downloads = 0
         end
@@ -509,12 +511,7 @@ function assess_readme_completeness(readme_content)
     
     code_blocks_count = count(r"```"i, readme_content) ÷ 2
     has_code_blocks = code_blocks_count > 0
-    
-    inline_badges = count(r"\[!\[.*?\]\(.*?\)\]"i, readme_content)  # [![text](url)]
-    ref_badges_with_link = count(r"\[!\[\]\[.*?\]\]\[.*?\]"i, readme_content)  # [![][ref]][link]
-    ref_badges_simple = count(r"\[!\[\]\[.*?\]\]"i, readme_content)  # [![][ref]]
-    simple_ref_badges = count(r"!\[\]\[.*?\]"i, readme_content)  # ![][ref]
-    badges_count = inline_badges + ref_badges_with_link + ref_badges_simple + simple_ref_badges
+    badges_count = count(r"(\[!\[\]\[.*?\]\](?:\[.*?\])?|\[!\[.*?\]\(.*?\)\])"i, readme_content)
     
     sections_count = count(r"^##\s+"m, readme_content)
     
