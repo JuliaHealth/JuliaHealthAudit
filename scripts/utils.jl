@@ -171,6 +171,7 @@ function get_maintainers_info(owner, repo)
                     end
                 end
             else
+                # Can't verify permissions - trust the committers we found
                 maintainers = collect(committers)
                 for (login, last_commit) in committers_with_dates
                     if last_commit >= six_months_ago
@@ -500,7 +501,7 @@ function assess_readme_completeness(readme_content)
     readme_size = length(lines)
     
     has_install = occursin(r"##\s*(install|getting\s+started|setup)"i, readme_content)
-    has_usage = occursin(r"##\s*(usage|examples?|quick\s*start|tutorial)"i, readme_content)
+    has_usage = occursin(r"##\s*(usage|examples?|quick\s*start|tutorial|first\s*run)"i, readme_content)
     has_contributing = occursin(r"##\s*contribut"i, readme_content) || 
                        occursin("contributing.md", content_lower)
     
