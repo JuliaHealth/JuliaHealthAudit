@@ -45,22 +45,16 @@ We agree to restrict the following behaviors in our community. Instances, threat
 
 Tensions can occur between community members even when they are trying their best to collaborate. Not every conflict represents a code of conduct violation, and this Code of Conduct reinforces encouraged behaviors and norms that can help avoid conflicts and minimize harm.
 
-When an incident does occur, it is important to report it promptly. To report a possible violation, **please contact the JuliaHealth project administrators privately.
+When an incident does occur, it is important to report it promptly. To report a possible violation, please contact the JuliaHealth project administrators privately. You may do this by emailing or privately messaging any JuliaHealth organization owner or administrator listed on the GitHub organization page: https://github.com/orgs/JuliaHealth/people
 
-You may do this by emailing or privately messaging any JuliaHealth organization owner or administrator listed on the GitHub organization page: https://github.com/orgs/JuliaHealth/people
-
-Reports will be handled confidentially and with care. If you are reporting a sensitive issue and prefer not to contact a specific individual, you may indicate this in your message and request that it be handled by another administrator.
-
-When possible, please include relevant details (such as links, screenshots, timestamps, or descriptions) to help us understand and address the situation effectively.
-**
+Reports will be handled confidentially and with care. If you are reporting a sensitive issue and prefer not to contact a specific individual, you may indicate this in your message and request that it be handled by another administrator. When possible, please include relevant details (such as links, screenshots, timestamps, or descriptions) to help us understand and address the situation effectively.
 
 Community Moderators take reports of violations seriously and will make every effort to respond in a timely manner. They will investigate all reports of code of conduct violations, reviewing messages, logs, and recordings, or interviewing witnesses and other participants. Community Moderators will keep investigation and enforcement actions as transparent as possible while prioritizing safety and confidentiality. In order to honor these values, enforcement actions are carried out in private with the involved parties, but communicating to the whole community may be part of a mutually agreed upon resolution.
 
 
 ## Addressing and Repairing Harm
 
-**The enforcement actions described below are intended as general guidance based on best practices in code of conduct enforcement. At present, JuliaHealth does not maintain a separate formal enforcement policy. Reports will be reviewed and handled by the JuliaHealth project administrators, who will use their discretion to determine appropriate responses, prioritizing community safety, fairness, and confidentiality.
-**
+The enforcement actions described below are intended as general guidance based on best practices in code of conduct enforcement. At present, JuliaHealth does not maintain a separate formal enforcement policy. Reports will be reviewed and handled by the JuliaHealth project administrators, who will use their discretion to determine appropriate responses, prioritizing community safety, fairness, and confidentiality.
 
 If an investigation by the Community Moderators finds that this Code of Conduct has been violated, the following enforcement ladder may be used to determine how best to repair harm, based on the incident's impact on the individuals involved and the community as a whole. Depending on the severity of a violation, lower rungs on the ladder may be skipped.
 
@@ -96,4 +90,3 @@ This Code of Conduct is adapted from the Contributor Covenant, version 3.0, perm
 Contributor Covenant is stewarded by the Organization for Ethical Source and licensed under CC BY-SA 4.0. To view a copy of this license, visit [https://creativecommons.org/licenses/by-sa/4.0/](https://creativecommons.org/licenses/by-sa/4.0/)
 
 For answers to common questions about Contributor Covenant, see the FAQ at [https://www.contributor-covenant.org/faq](https://www.contributor-covenant.org/faq). Translations are provided at [https://www.contributor-covenant.org/translations](https://www.contributor-covenant.org/translations). Additional enforcement and community guideline resources can be found at [https://www.contributor-covenant.org/resources](https://www.contributor-covenant.org/resources). The enforcement ladder was inspired by the work of [Mozilla’s code of conduct team](https://github.com/mozilla/inclusion).
-
