@@ -510,7 +510,11 @@ function assess_readme_completeness(readme_content)
     code_blocks_count = count(r"```"i, readme_content) ÷ 2
     has_code_blocks = code_blocks_count > 0
     
-    badges_count = count(r"\[!\[.*?\]\(.*?\)\]"i, readme_content)
+    inline_badges = count(r"\[!\[.*?\]\(.*?\)\]"i, readme_content)  # [![text](url)]
+    ref_badges_with_link = count(r"\[!\[\]\[.*?\]\]\[.*?\]"i, readme_content)  # [![][ref]][link]
+    ref_badges_simple = count(r"\[!\[\]\[.*?\]\]"i, readme_content)  # [![][ref]]
+    simple_ref_badges = count(r"!\[\]\[.*?\]"i, readme_content)  # ![][ref]
+    badges_count = inline_badges + ref_badges_with_link + ref_badges_simple + simple_ref_badges
     
     sections_count = count(r"^##\s+"m, readme_content)
     

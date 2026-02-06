@@ -85,7 +85,7 @@ scripts/
 data/
   ├── results/
   │   ├── lists/ 
-  │       └── *.csv                    
+  │       └── *.txt                    
   │   ├── packages.csv                
   │   ├── non_packages.csv            
   │   ├── registry_packages.csv   
@@ -100,3 +100,7 @@ data/
 ## Results
 
 Browse all charts in [RESULTS.md](RESULTS.md). They are grouped by Packages, Non-Packages and Contributors.
+
+## Acknowledgments
+
+This project was developed with assistance from GitHub Copilot where helpful. All code has been carefully reviewed, tested and validated before integration into the pipeline.
