@@ -38,7 +38,7 @@ OMOPCDMCohortCreator.jl,TheCedarPrince; Jay-sanjay; Farreeda; dublinsubway
 OMOPCDMDatabaseConnector.jl,TheCedarPrince
 OMOPCDMFeasibility.jl,kosuri-indu; TheCedarPrince
 OMOPCDMPathways.jl,Jay-sanjay; TheCedarPrince; asinghvi17
-OMOPCommonDataModel.jl,DilumAluthge
+OMOPCommonDataModel.jl,DilumAluthge; kosuri-indu
 OMOPVocabMapper.jl,Mounika-Thakkallapally; AshlinHarris
 PharmaceuticalClassification.jl,DilumAluthge
 PubChemCrawler.jl,timholy; tp2750; DilumAluthge; fchichorro

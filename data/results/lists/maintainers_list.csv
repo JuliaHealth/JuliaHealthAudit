@@ -38,7 +38,7 @@ OMOPCDMCohortCreator.jl,Jay-sanjay; TheCedarPrince
 OMOPCDMDatabaseConnector.jl,TheCedarPrince
 OMOPCDMFeasibility.jl,TheCedarPrince; kosuri-indu
 OMOPCDMPathways.jl,Jay-sanjay; TheCedarPrince
-OMOPCommonDataModel.jl,DilumAluthge
+OMOPCommonDataModel.jl,kosuri-indu
 OMOPVocabMapper.jl,Mounika-Thakkallapally; invalid-email-address
 PharmaceuticalClassification.jl,DilumAluthge
 PubChemCrawler.jl,timholy; tp2750

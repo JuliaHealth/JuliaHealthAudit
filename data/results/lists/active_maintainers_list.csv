@@ -38,7 +38,7 @@ OMOPCDMCohortCreator.jl,
 OMOPCDMDatabaseConnector.jl,
 OMOPCDMFeasibility.jl,TheCedarPrince; kosuri-indu
 OMOPCDMPathways.jl,
-OMOPCommonDataModel.jl,
+OMOPCommonDataModel.jl,kosuri-indu
 OMOPVocabMapper.jl,
 PharmaceuticalClassification.jl,
 PubChemCrawler.jl,timholy; tp2750
