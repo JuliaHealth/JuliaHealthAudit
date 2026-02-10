@@ -4,7 +4,16 @@
 [![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliahealth.org/PackageName.jl/stable/)
 [![License](https://img.shields.io/github/license/JuliaHealth/PackageName.jl)](LICENSE)
 
-> One-sentence description of what this package does and who it's for.
+## About 
+
+PackageName.jl provides tools for [briefly describe the domain or problem]. It is designed for [target users], with an emphasis on [performance / usability / extensibility]. More description of what this package does and who it's for.
+
+## Features
+
+- **Feature 1**: Description of key capability
+- **Feature 2**: Another important feature
+- **Feature 3**: What makes this package useful
+- **Feature 4**: Additional functionality
 
 ## Installation
 
@@ -41,13 +50,6 @@ result = process(data)
 visualize(result)
 ```
 
-## Features
-
-- **Feature 1**: Description of key capability
-- **Feature 2**: Another important feature
-- **Feature 3**: What makes this package useful
-- **Feature 4**: Additional functionality
-
 ## Usage Examples
 
 ### Basic Example
@@ -78,39 +80,13 @@ save_results(results, "output.csv")
 
 For more examples, see the [documentation](https://juliahealth.org/PackageName.jl/stable/).
 
-## Documentation
-
-Comprehensive documentation is available at:
-- **[Stable](https://juliahealth.org/PackageName.jl/stable/)** - Latest release
-- **[Dev](https://juliahealth.org/PackageName.jl/dev/)** - Development version
-
-The documentation includes:
-- Getting started guide
-- API reference
-- Tutorials and examples
-- Best practices
-
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
-- How to report bugs
-- How to suggest new features
-- Development workflow
-- Code style guidelines
-- Testing requirements
+We welcome contributions from the community! If you find a bug, have a feature request, or want to improve the package, please:
 
-Quick links:
-- [Report a Bug](https://github.com/JuliaHealth/PackageName.jl/issues/new?template=bug_report.md)
-- [Request a Feature](https://github.com/JuliaHealth/PackageName.jl/issues/new?template=feature_request.md)
-- [Ask Questions](https://github.com/JuliaHealth/PackageName.jl/discussions)
-
-## Community
-
-- **Slack**: #health-and-medicine at julialang.slack.com
-- **Discourse**: [JuliaHealth category](https://discourse.julialang.org)
-- **GitHub Discussions**: [Discussions](https://github.com/JuliaHealth/PackageName.jl/discussions)
-
-Please follow our [Code of Conduct](CODE_OF_CONDUCT.md) in all interactions.
+1. Check the [Contributing Guidelines](CONTRIBUTING.md)
+2. See the [Code of Conduct](CODE_OF_CONDUCT.md)
+3. Open a [new issue](https://github.com/JuliaHealth/PackageName.jl/issues) or [pull request](https://github.com/JuliaHealth/PackageName.jl/pulls)
 
 ## Citation
 
@@ -125,15 +101,11 @@ If you use this package in your research, please cite:
 }
 ```
 
-## Related Packages
+## License
 
-- [RelatedPackage1.jl](https://github.com/JuliaHealth/RelatedPackage1.jl) - Description
-- [RelatedPackage2.jl](https://github.com/JuliaHealth/RelatedPackage2.jl) - Description
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
 
 This work was supported by [funding source]. Special thanks to [contributors/organizations].
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
