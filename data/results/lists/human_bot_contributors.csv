@@ -1,12 +1,11 @@
 human_contributors,bot_contributors
-@Night-Glimmers,BCBI Bot
-AaronGhost,Julia TagBot
-Abdelrahman Fathy (Tee),bors[bot]
-AbdulazizAhmed,dependabot[bot]
-Adam Brewster,fossabot
-Adam Wysokiński,github-actions[bot]
-Anshul Singhvi,google-labs-jules[bot]
-Ashlin Harris,
+AaronGhost,BCBI Bot
+Abdelrahman Fathy (Tee),Julia TagBot
+AbdulazizAhmed,bors[bot]
+Adam Brewster,dependabot[bot]
+Adam Wysokiński,fossabot
+Anshul Singhvi,github-actions[bot]
+Ashlin Harris,google-labs-jules[bot]
 Ben Russert,
 Carlo Baldassi,
 Carlos Castillo Passi,
@@ -47,6 +46,7 @@ Mateusz Baran,
 MichelaRocchetti,
 Mounika Thakkallapally,
 Nicole Epp,
+Night-Glimmers,
 Niklas Hackelberg,
 Oscar Smith,
 Pablo Irarrazaval,

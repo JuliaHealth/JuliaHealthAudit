@@ -1,6 +1,6 @@
 true,false
-,ARules.jl
-,BioMedQuery.jl
+KomaMRI.jl,ARules.jl
+Thunderbolt.jl,BioMedQuery.jl
 ,BlindingIndex.jl
 ,BloodFlowTrixi.jl
 ,CAOS.jl
@@ -25,7 +25,6 @@ true,false
 ,IPUMS.jl
 ,ITKIOWrapp.jl
 ,ITKIOWrapper.jl
-,KomaMRI.jl
 ,MTIWrapper.jl
 ,MedEval3D.jl
 ,MedEye3d.jl
@@ -45,5 +44,4 @@ true,false
 ,PubMedMiner.jl
 ,SMARTAppLaunch.jl
 ,SMARTBackendServices.jl
-,Thunderbolt.jl
 ,WrapperITKIO.jl

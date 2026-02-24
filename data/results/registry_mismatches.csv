@@ -1,7 +1,5 @@
 package_name,org_repo_url,registry_repo_url
 BlindingIndex,https://github.com/JuliaHealth/BlindingIndex.jl,https://codeberg.org/AdamWysokinski/BlindingIndex.jl
-DICOMTree,https://github.com/JuliaHealth/DICOMTree.jl,https://github.com/fdekerme/DICOMTree.jl.git
 MedEval3D,https://github.com/JuliaHealth/MedEval3D.jl,https://github.com/jakubMitura14/MedEval3D.jl.git
 MedPipe3D,https://github.com/JuliaHealth/MedPipe3D.jl,https://github.com/jakubMitura14/MedPipe3D.jl.git
 NeuroAnalyzer,https://github.com/JuliaHealth/NeuroAnalyzer.jl,https://codeberg.org/AdamWysokinski/NeuroAnalyzer.jl
-OMOPVocabMapper,https://github.com/JuliaHealth/OMOPVocabMapper.jl,https://github.com/bcbi/OMOPVocabMapper.jl.git

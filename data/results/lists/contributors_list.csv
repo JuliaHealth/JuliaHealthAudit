@@ -25,7 +25,7 @@ ICD_GEMs.jl,InterdisciplinaryPhysicsTeam; pitmonticone
 IPUMS.jl,TheCedarPrince; 00krishna
 ITKIOWrapp.jl,jakubMitura14; divital-coder
 ITKIOWrapper.jl,divital-coder; jakubMitura14
-KomaMRI.jl,cncastillo; pvillacorta; beorostica; Stockless; rkierulf; aTrotier; gsahonero; curtcorum; tinorodriguez; DilumAluthge; KookiesNKareem; TheCedarPrince; nHackel; pabloirarrazaval; thePlasm; calberolalopez; gabuzi
+KomaMRI.jl,cncastillo; pvillacorta; beorostica; Stockless; rkierulf; aTrotier; gsahonero; curtcorum; tinorodriguez; DilumAluthge; KookiesNKareem; kosuri-indu; TheCedarPrince; nHackel; pabloirarrazaval; thePlasm; calberolalopez; gabuzi
 MTIWrapper.jl,mirestrepo; DilumAluthge
 MedEval3D.jl,jakubMitura14; jagiellonczyk14; ParamThakkar123; rupalimits
 MedEye3d.jl,jakubMitura14; divital-coder; jagiellonczyk14
@@ -45,14 +45,14 @@ PubChemCrawler.jl,timholy; tp2750; DilumAluthge; fchichorro
 PubMedMiner.jl,mirestrepo; mcmcgrath13; ibacher; DilumAluthge
 SMARTAppLaunch.jl,DilumAluthge; Vaibhavdixit02; devmotion
 SMARTBackendServices.jl,DilumAluthge; devmotion
-Thunderbolt.jl,termi-official; AbdAlazezAhmed; Abdelrahman912; kylebeggs; oscardssmith
+Thunderbolt.jl,termi-official; AbdAlazezAhmed; Abdelrahman912; kylebeggs; kosuri-indu; oscardssmith
 WrapperITKIO.jl,jakubMitura14
 EpiJ,TheCedarPrince
 JuliaHealthAudit,kosuri-indu
 JuliaHealthEcosystemPaper,TheCedarPrince; kosuri-indu
 JuliaHealthLLM,ParamThakkar123; TheCedarPrince
 JuliaHealthWebsiteOld,DilumAluthge; TheCedarPrince; pitmonticone; ChrisRackauckas; Hetarth02; logankilpatrick
-JuliaHealthZoo,
+JuliaHealthZoo,kosuri-indu
 MedPipe3DTutorial,jakubMitura14
 OMOPCDMMetrics,TheCedarPrince
 OMOPCDMPredictor,TheCedarPrince

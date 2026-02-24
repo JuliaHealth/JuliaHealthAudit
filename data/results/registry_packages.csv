@@ -6,7 +6,7 @@ BloodFlowTrixi,B/BloodFlowTrixi,https://github.com/JuliaHealth/BloodFlowTrixi.jl
 CAOS,C/CAOS,https://github.com/JuliaHealth/CAOS.jl.git,true
 DICOM,D/DICOM,https://github.com/JuliaHealth/DICOM.jl.git,true
 DICOMClient,D/DICOMClient,https://github.com/JuliaHealth/DICOMClient.jl.git,true
-DICOMTree,D/DICOMTree,https://github.com/fdekerme/DICOMTree.jl.git,false
+DICOMTree,D/DICOMTree,https://github.com/JuliaHealth/DICOMTree.jl.git,true
 DateShifting,D/DateShifting,https://github.com/JuliaHealth/DateShifting.jl.git,true
 DiagnosisClassification,D/DiagnosisClassification,https://github.com/JuliaHealth/DiagnosisClassification.jl.git,true
 EHRAuthentication,E/EHRAuthentication,https://github.com/JuliaHealth/EHRAuthentication.jl.git,true
@@ -27,7 +27,7 @@ NeuroAnalyzer,N/NeuroAnalyzer,https://codeberg.org/AdamWysokinski/NeuroAnalyzer.
 OMOPCDMCohortCreator,O/OMOPCDMCohortCreator,https://github.com/JuliaHealth/OMOPCDMCohortCreator.jl.git,true
 OMOPCDMDatabaseConnector,O/OMOPCDMDatabaseConnector,https://github.com/JuliaHealth/OMOPCDMDatabaseConnector.jl.git,true
 OMOPCommonDataModel,O/OMOPCommonDataModel,https://github.com/JuliaHealth/OMOPCommonDataModel.jl.git,true
-OMOPVocabMapper,O/OMOPVocabMapper,https://github.com/bcbi/OMOPVocabMapper.jl.git,false
+OMOPVocabMapper,O/OMOPVocabMapper,https://github.com/JuliaHealth/OMOPVocabMapper.jl.git,true
 PharmaceuticalClassification,P/PharmaceuticalClassification,https://github.com/JuliaHealth/PharmaceuticalClassification.jl.git,true
 PubChemCrawler,P/PubChemCrawler,https://github.com/JuliaHealth/PubChemCrawler.jl.git,true
 SMARTAppLaunch,S/SMARTAppLaunch,https://github.com/JuliaHealth/SMARTAppLaunch.jl.git,true

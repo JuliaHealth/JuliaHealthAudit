@@ -25,7 +25,7 @@ ICD_GEMs.jl,
 IPUMS.jl,
 ITKIOWrapp.jl,
 ITKIOWrapper.jl,
-KomaMRI.jl,KookiesNKareem; Stockless; aTrotier; cncastillo; nHackel; pvillacorta; thePlasm
+KomaMRI.jl,KookiesNKareem; cncastillo; kosuri-indu; pvillacorta
 MTIWrapper.jl,
 MedEval3D.jl,
 MedEye3d.jl,
@@ -45,14 +45,14 @@ PubChemCrawler.jl,timholy; tp2750
 PubMedMiner.jl,
 SMARTAppLaunch.jl,
 SMARTBackendServices.jl,
-Thunderbolt.jl,oscardssmith; termi-official
+Thunderbolt.jl,Abdelrahman912; kosuri-indu; oscardssmith; termi-official
 WrapperITKIO.jl,
 EpiJ,
 JuliaHealthAudit,kosuri-indu
 JuliaHealthEcosystemPaper,TheCedarPrince; kosuri-indu
 JuliaHealthLLM,ParamThakkar123; TheCedarPrince
 JuliaHealthWebsiteOld,
-JuliaHealthZoo,
+JuliaHealthZoo,kosuri-indu
 MedPipe3DTutorial,
 OMOPCDMMetrics,
 OMOPCDMPredictor,

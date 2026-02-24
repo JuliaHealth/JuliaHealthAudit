@@ -15,8 +15,8 @@ Thunderbolt.jl,FHIRClientJSON.jl
 JuliaHealthAudit,FHIRClientXML.jl
 JuliaHealthEcosystemPaper,GitHubAnalytics.jl
 JuliaHealthLLM,HealthMLBase.jl
-juliahealth.github.io,ICD_GEMs.jl
-,IPUMS.jl
+JuliaHealthZoo,ICD_GEMs.jl
+juliahealth.github.io,IPUMS.jl
 ,ITKIOWrapp.jl
 ,ITKIOWrapper.jl
 ,MTIWrapper.jl
@@ -36,7 +36,6 @@ juliahealth.github.io,ICD_GEMs.jl
 ,WrapperITKIO.jl
 ,EpiJ
 ,JuliaHealthWebsiteOld
-,JuliaHealthZoo
 ,MedPipe3DTutorial
 ,OMOPCDMMetrics
 ,OMOPCDMPredictor
