@@ -29,6 +29,9 @@ function main()
     println("\nPhase 6: Generating Visualizations\n")
     include("visualizations/visualize.jl")
 
+    println("\nPhase 7: Updating Temporal CSVs\n")
+    include("history/01_update_temporal_csvs.jl")
+
     println("\nAudit Complete!")
     println("Results saved to:")
     println("  - data/results/audit_packages.csv")
@@ -37,6 +40,7 @@ function main()
     println("  - data/results/registry_mismatches.csv")
     println("  - data/results/contributors_summary.csv")
     println("  - data/visualizations/*.png")
+    println("  - data/history/*.csv")
     println("  - data/results/lists/*.txt")
     println("  - RESULTS.md (comprehensive report)")
 end

@@ -45,6 +45,7 @@ jobs:
           git add data/results/*.csv
           git add data/visualizations/*.png
           git add data/results/lists/* || true
+          git add data/history/*.csv || true
 
           # Commit and push only if there are changes
           if ! git diff --quiet || ! git diff --staged --quiet; then
