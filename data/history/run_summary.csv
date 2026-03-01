@@ -1,0 +1,2 @@
+run_month,run_timestamp,run_id,total_packages,stars_total,monthly_downloads_total,total_downloads_total,ci_adoption_pct,gh_pages_adoption_pct,active_maintainers_pct,top_stars_package,top_monthly_downloads_package,top_total_downloads_package
+2026-03,2026-03-01T15:28:01Z,22546255040,48,0,0,0,0.0,0.0,0.0,,,

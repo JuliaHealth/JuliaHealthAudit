@@ -29,8 +29,8 @@ KomaMRI.jl,cncastillo; pvillacorta; beorostica; Stockless; rkierulf; aTrotier; g
 MTIWrapper.jl,mirestrepo; DilumAluthge
 MedEval3D.jl,jakubMitura14; jagiellonczyk14; ParamThakkar123; rupalimits
 MedEye3d.jl,jakubMitura14; divital-coder; jagiellonczyk14
-MedImages.jl,jakubMitura14; divital-coder; JanZubik
-MedPipe3D.jl,jakubMitura14; JanZubik; MarijaGijic
+MedImages.jl,jakubMitura14; divital-coder; JanZubik; Muskan121622
+MedPipe3D.jl,jakubMitura14; MarijaGijic; JanZubik; KushalTrivedi19032005
 NCEI.jl,Nosferican; fredrikekre
 NeuroAnalyzer.jl,AdamWysokinski; TheCedarPrince
 OHDSIAPI.jl,TheCedarPrince; Farreeda; kosuri-indu

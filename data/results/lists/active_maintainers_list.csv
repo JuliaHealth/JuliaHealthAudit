@@ -16,7 +16,7 @@ FHIRClient.jl,
 FHIRClientJSON.jl,
 FHIRClientXML.jl,
 GitHubAnalytics.jl,
-HealthBase.jl,kosuri-indu
+HealthBase.jl,
 HealthDash.jl,kosuri-indu
 HealthLLM.jl,ParamThakkar123; TheCedarPrince
 HealthMLBase.jl,
@@ -29,8 +29,8 @@ KomaMRI.jl,KookiesNKareem; cncastillo; kosuri-indu; pvillacorta
 MTIWrapper.jl,
 MedEval3D.jl,
 MedEye3d.jl,
-MedImages.jl,divital-coder; jakubMitura14
-MedPipe3D.jl,
+MedImages.jl,Muskan121622; divital-coder; jakubMitura14
+MedPipe3D.jl,KushalTrivedi19032005; jakubMitura14
 NCEI.jl,
 NeuroAnalyzer.jl,AdamWysokinski
 OHDSIAPI.jl,

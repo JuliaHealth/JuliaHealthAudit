@@ -1,11 +1,11 @@
 true,false
 ARules.jl,JuliaHealthEcosystemPaper
 BioMedQuery.jl,JuliaHealthWebsiteOld
-BlindingIndex.jl,MedPipe3DTutorial
-BloodFlowTrixi.jl,ObservationalHealthSubecosystemPaper
-CAOS.jl,juliahealth.github.io
-CTakesParser.jl,juliahealth.github.io-previews
-CloToP.jl,
+BlindingIndex.jl,JuliaHealthZoo
+BloodFlowTrixi.jl,MedPipe3DTutorial
+CAOS.jl,ObservationalHealthSubecosystemPaper
+CTakesParser.jl,juliahealth.github.io
+CloToP.jl,juliahealth.github.io-previews
 DICOM.jl,
 DICOMClient.jl,
 DICOMTree.jl,
@@ -50,6 +50,5 @@ WrapperITKIO.jl,
 EpiJ,
 JuliaHealthAudit,
 JuliaHealthLLM,
-JuliaHealthZoo,
 OMOPCDMMetrics,
 OMOPCDMPredictor,

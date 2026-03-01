@@ -1,7 +1,7 @@
 true,false
 KomaMRI.jl,ARules.jl
-Thunderbolt.jl,BioMedQuery.jl
-,BlindingIndex.jl
+OMOPCDMFeasibility.jl,BioMedQuery.jl
+Thunderbolt.jl,BlindingIndex.jl
 ,BloodFlowTrixi.jl
 ,CAOS.jl
 ,CTakesParser.jl
@@ -35,7 +35,6 @@ Thunderbolt.jl,BioMedQuery.jl
 ,OHDSIAPI.jl
 ,OMOPCDMCohortCreator.jl
 ,OMOPCDMDatabaseConnector.jl
-,OMOPCDMFeasibility.jl
 ,OMOPCDMPathways.jl
 ,OMOPCommonDataModel.jl
 ,OMOPVocabMapper.jl

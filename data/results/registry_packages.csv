@@ -1,7 +1,7 @@
 package_name,registry_path,registry_repo_url,url_matches_juliahealth
 ARules,A/ARules,https://github.com/JuliaHealth/ARules.jl.git,true
 BioMedQuery,B/BioMedQuery,https://github.com/JuliaHealth/BioMedQuery.jl.git,true
-BlindingIndex,B/BlindingIndex,https://codeberg.org/AdamWysokinski/BlindingIndex.jl,false
+BlindingIndex,B/BlindingIndex,https://github.com/JuliaHealth/BlindingIndex.jl.git,true
 BloodFlowTrixi,B/BloodFlowTrixi,https://github.com/JuliaHealth/BloodFlowTrixi.jl.git,true
 CAOS,C/CAOS,https://github.com/JuliaHealth/CAOS.jl.git,true
 DICOM,D/DICOM,https://github.com/JuliaHealth/DICOM.jl.git,true

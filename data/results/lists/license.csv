@@ -1,10 +1,10 @@
 Apache-2.0,BSD-2-Clause,ISC,MIT,Other,Unknown
 MedEye3d.jl,BlindingIndex.jl,NCEI.jl,BioMedQuery.jl,ARules.jl,JuliaHealthWebsiteOld
-MedImages.jl,CloToP.jl,,BloodFlowTrixi.jl,CAOS.jl,MedPipe3DTutorial
-,NeuroAnalyzer.jl,,DICOM.jl,CTakesParser.jl,ObservationalHealthSubecosystemPaper
-,,,DICOMClient.jl,MTIWrapper.jl,juliahealth.github.io
-,,,DICOMTree.jl,OMOPCDMCohortCreator.jl,juliahealth.github.io-previews
-,,,DateShifting.jl,OMOPCDMDatabaseConnector.jl,
+MedImages.jl,CloToP.jl,,BloodFlowTrixi.jl,CAOS.jl,JuliaHealthZoo
+,NeuroAnalyzer.jl,,DICOM.jl,CTakesParser.jl,MedPipe3DTutorial
+,,,DICOMClient.jl,MTIWrapper.jl,ObservationalHealthSubecosystemPaper
+,,,DICOMTree.jl,OMOPCDMCohortCreator.jl,juliahealth.github.io
+,,,DateShifting.jl,OMOPCDMDatabaseConnector.jl,juliahealth.github.io-previews
 ,,,DiagnosisClassification.jl,,
 ,,,EHRAuthentication.jl,,
 ,,,FHIRClient.jl,,
@@ -39,6 +39,5 @@ MedImages.jl,CloToP.jl,,BloodFlowTrixi.jl,CAOS.jl,MedPipe3DTutorial
 ,,,JuliaHealthAudit,,
 ,,,JuliaHealthEcosystemPaper,,
 ,,,JuliaHealthLLM,,
-,,,JuliaHealthZoo,,
 ,,,OMOPCDMMetrics,,
 ,,,OMOPCDMPredictor,,

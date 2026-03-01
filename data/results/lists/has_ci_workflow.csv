@@ -6,12 +6,12 @@ BloodFlowTrixi.jl,MedEval3D.jl
 CAOS.jl,MedPipe3D.jl
 CTakesParser.jl,WrapperITKIO.jl
 DICOM.jl,JuliaHealthEcosystemPaper
-DICOMClient.jl,JuliaHealthZoo
-DICOMTree.jl,MedPipe3DTutorial
-DateShifting.jl,OMOPCDMPredictor
-DiagnosisClassification.jl,ObservationalHealthSubecosystemPaper
-EHRAuthentication.jl,juliahealth.github.io
-FHIRClient.jl,juliahealth.github.io-previews
+DICOMClient.jl,MedPipe3DTutorial
+DICOMTree.jl,OMOPCDMPredictor
+DateShifting.jl,ObservationalHealthSubecosystemPaper
+DiagnosisClassification.jl,juliahealth.github.io
+EHRAuthentication.jl,juliahealth.github.io-previews
+FHIRClient.jl,
 FHIRClientJSON.jl,
 FHIRClientXML.jl,
 GitHubAnalytics.jl,
@@ -45,4 +45,5 @@ EpiJ,
 JuliaHealthAudit,
 JuliaHealthLLM,
 JuliaHealthWebsiteOld,
+JuliaHealthZoo,
 OMOPCDMMetrics,
