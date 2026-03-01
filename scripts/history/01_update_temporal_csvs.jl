@@ -44,7 +44,7 @@ function build_packages_timeseries(packages_df::DataFrame, run_month::String, ru
         :days_since_last_activity,
     ]
 
-    available = Set(names(packages_df))
+    available = Set(Symbol.(names(packages_df)))
     select_cols = [c for c in preferred_cols if c in available]
 
     timeseries = select(packages_df, select_cols)
@@ -78,7 +78,7 @@ function build_packages_timeseries(packages_df::DataFrame, run_month::String, ru
         :days_since_last_activity,
     ]
 
-    final_cols = [c for c in ordered_cols if c in Set(names(timeseries))]
+    final_cols = [c for c in ordered_cols if c in Set(Symbol.(names(timeseries)))]
     return timeseries[:, final_cols]
 end
 
