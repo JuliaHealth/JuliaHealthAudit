@@ -99,8 +99,10 @@ function build_monthly_tops(packages_df::DataFrame, run_month::String, run_ts::S
         (:total_downloads, "total_downloads"),
     ]
 
+    available = Set(Symbol.(names(packages_df)))
+
     for (metric_col, metric_name) in metrics
-        metric_col in names(packages_df) || continue
+        metric_col in available || continue
 
         ranked = sort(packages_df, metric_col; rev=true)
         top_n = min(15, nrow(ranked))
@@ -127,26 +129,27 @@ end
 
 function build_run_summary(packages_df::DataFrame, run_month::String, run_ts::String, run_id::String)
     total_packages = nrow(packages_df)
+    available = Set(Symbol.(names(packages_df)))
 
-    stars_total = :stars in names(packages_df) ? sum(skipmissing(packages_df.stars)) : 0
-    monthly_downloads_total = :monthly_downloads in names(packages_df) ? sum(skipmissing(packages_df.monthly_downloads)) : 0
-    total_downloads_total = :total_downloads in names(packages_df) ? sum(skipmissing(packages_df.total_downloads)) : 0
+    stars_total = :stars in available ? sum(skipmissing(packages_df.stars)) : 0
+    monthly_downloads_total = :monthly_downloads in available ? sum(skipmissing(packages_df.monthly_downloads)) : 0
+    total_downloads_total = :total_downloads in available ? sum(skipmissing(packages_df.total_downloads)) : 0
 
-    ci_adoption_pct = :has_ci_workflow in names(packages_df) ? round(100 * sum(packages_df.has_ci_workflow) / max(total_packages, 1); digits=1) : 0.0
-    gh_pages_adoption_pct = :has_gh_pages in names(packages_df) ? round(100 * sum(packages_df.has_gh_pages) / max(total_packages, 1); digits=1) : 0.0
-    active_maintainers_pct = :has_active_maintainers in names(packages_df) ? round(100 * sum(packages_df.has_active_maintainers) / max(total_packages, 1); digits=1) : 0.0
+    ci_adoption_pct = :has_ci_workflow in available ? round(100 * sum(packages_df.has_ci_workflow) / max(total_packages, 1); digits=1) : 0.0
+    gh_pages_adoption_pct = :has_gh_pages in available ? round(100 * sum(packages_df.has_gh_pages) / max(total_packages, 1); digits=1) : 0.0
+    active_maintainers_pct = :has_active_maintainers in available ? round(100 * sum(packages_df.has_active_maintainers) / max(total_packages, 1); digits=1) : 0.0
 
     top_stars_package = ""
     top_monthly_downloads_package = ""
     top_total_downloads_package = ""
 
-    if total_packages > 0 && :stars in names(packages_df)
+    if total_packages > 0 && :stars in available
         top_stars_package = String(sort(packages_df, :stars; rev=true)[1, :package_name])
     end
-    if total_packages > 0 && :monthly_downloads in names(packages_df)
+    if total_packages > 0 && :monthly_downloads in available
         top_monthly_downloads_package = String(sort(packages_df, :monthly_downloads; rev=true)[1, :package_name])
     end
-    if total_packages > 0 && :total_downloads in names(packages_df)
+    if total_packages > 0 && :total_downloads in available
         top_total_downloads_package = String(sort(packages_df, :total_downloads; rev=true)[1, :package_name])
     end
 
