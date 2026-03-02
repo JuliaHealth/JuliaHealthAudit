@@ -3,9 +3,9 @@
 using CSV
 using DataFrames
 using Dates
+using Statistics
 
 const AUDIT_PACKAGES_INPUT = "data/results/audit_packages.csv"
-const PACKAGES_TIMESERIES_OUTPUT = "data/history/packages_timeseries.csv"
 const MONTHLY_TOPS_OUTPUT = "data/history/monthly_tops.csv"
 const RUN_SUMMARY_OUTPUT = "data/history/run_summary.csv"
 
@@ -20,153 +20,201 @@ function load_or_empty(path::String, schema::DataFrame)
     return schema
 end
 
-function build_packages_timeseries(packages_df::DataFrame, run_month::String, run_ts::String, run_id::String)
-    preferred_cols = [
-        :package_name,
-        :in_general_registry,
-        :is_fork,
-        :is_archived,
-        :stars,
-        :monthly_downloads,
-        :total_downloads,
-        :human_contributors_count,
-        :bot_contributors_count,
-        :maintainers_count,
-        :active_maintainers_count,
-        :has_active_maintainers,
-        :maintenance_status,
-        :readme_completeness_score,
-        :has_ci_workflow,
-        :has_gh_pages,
-        :open_issues_count,
-        :open_prs_count,
-        :avg_pr_merge_days,
-        :days_since_last_activity,
-    ]
+function align_schema_or_reset(existing::DataFrame, schema::DataFrame, label::String)
+    if isempty(existing)
+        return existing
+    end
 
-    available = Set(Symbol.(names(packages_df)))
-    select_cols = [c for c in preferred_cols if c in available]
+    existing_cols = Set(Symbol.(names(existing)))
+    schema_cols = Set(Symbol.(names(schema)))
+    if existing_cols == schema_cols
+        return existing
+    end
 
-    timeseries = select(packages_df, select_cols)
-    timeseries.run_month = fill(run_month, nrow(timeseries))
-    timeseries.run_timestamp = fill(run_ts, nrow(timeseries))
-    timeseries.run_id = fill(run_id, nrow(timeseries))
-
-    ordered_cols = [
-        :run_month,
-        :run_timestamp,
-        :run_id,
-        :package_name,
-        :in_general_registry,
-        :is_fork,
-        :is_archived,
-        :stars,
-        :monthly_downloads,
-        :total_downloads,
-        :human_contributors_count,
-        :bot_contributors_count,
-        :maintainers_count,
-        :active_maintainers_count,
-        :has_active_maintainers,
-        :maintenance_status,
-        :readme_completeness_score,
-        :has_ci_workflow,
-        :has_gh_pages,
-        :open_issues_count,
-        :open_prs_count,
-        :avg_pr_merge_days,
-        :days_since_last_activity,
-    ]
-
-    final_cols = [c for c in ordered_cols if c in Set(Symbol.(names(timeseries)))]
-    return timeseries[:, final_cols]
+    println("Schema changed for $label; resetting existing history for this file")
+    return schema[1:0, :]
 end
 
-function build_monthly_tops(packages_df::DataFrame, run_month::String, run_ts::String, run_id::String)
+function build_monthly_tops(
+    packages_df::DataFrame,
+    run_month::String,
+    run_ts::String,
+    run_id::String,
+)
     tops = DataFrame(
-        run_month=String[],
-        run_timestamp=String[],
-        run_id=String[],
-        metric=String[],
-        rank=Int[],
-        package_name=String[],
-        value=Float64[],
+        run_month=[run_month],
+        run_timestamp=[run_ts],
+        run_id=[run_id],
     )
 
     metrics = [
         (:stars, "stars"),
         (:monthly_downloads, "monthly_downloads"),
-        (:total_downloads, "total_downloads"),
+        (:human_contributors_count, "human_contributors_count"),
+        (:active_maintainers_count, "active_maintainers_count"),
     ]
 
     available = Set(Symbol.(names(packages_df)))
 
     for (metric_col, metric_name) in metrics
-        metric_col in available || continue
+        ranked = metric_col in available ?
+            sort(packages_df, metric_col; rev=true) :
+            packages_df[1:0, :]
+        top_n = min(5, nrow(ranked))
 
-        ranked = sort(packages_df, metric_col; rev=true)
-        top_n = min(15, nrow(ranked))
+        for i in 1:5
+            package_col = Symbol("$(metric_name)_top$(i)_package")
+            value_col = Symbol("$(metric_name)_top$(i)_value")
 
-        for i in 1:top_n
-            row = ranked[i, :]
-            raw_val = row[metric_col]
-            val = ismissing(raw_val) ? 0.0 : Float64(raw_val)
-
-            push!(tops, (
-                run_month,
-                run_ts,
-                run_id,
-                metric_name,
-                i,
-                String(row.package_name),
-                val,
-            ))
+            if i <= top_n
+                row = ranked[i, :]
+                raw_val = row[metric_col]
+                tops[!, package_col] = [String(row.package_name)]
+                tops[!, value_col] = [ismissing(raw_val) ? 0.0 : Float64(raw_val)]
+            else
+                tops[!, package_col] = [""]
+                tops[!, value_col] = [0.0]
+            end
         end
     end
 
     return tops
 end
 
-function build_run_summary(packages_df::DataFrame, run_month::String, run_ts::String, run_id::String)
+function build_run_summary(
+    packages_df::DataFrame,
+    run_month::String,
+    run_ts::String,
+    run_id::String,
+)
     total_packages = nrow(packages_df)
     available = Set(Symbol.(names(packages_df)))
 
-    stars_total = :stars in available ? sum(skipmissing(packages_df.stars)) : 0
-    monthly_downloads_total = :monthly_downloads in available ? sum(skipmissing(packages_df.monthly_downloads)) : 0
-    total_downloads_total = :total_downloads in available ? sum(skipmissing(packages_df.total_downloads)) : 0
+    get_total(metric_col::Symbol) = metric_col in available ? sum(skipmissing(packages_df[!, metric_col])) : 0
 
-    ci_adoption_pct = :has_ci_workflow in available ? round(100 * sum(packages_df.has_ci_workflow) / max(total_packages, 1); digits=1) : 0.0
-    gh_pages_adoption_pct = :has_gh_pages in available ? round(100 * sum(packages_df.has_gh_pages) / max(total_packages, 1); digits=1) : 0.0
-    active_maintainers_pct = :has_active_maintainers in available ? round(100 * sum(packages_df.has_active_maintainers) / max(total_packages, 1); digits=1) : 0.0
+    function get_avg(metric_col::Symbol; digits::Int=2)
+        if !(metric_col in available)
+            return 0.0
+        end
+        values = collect(skipmissing(packages_df[!, metric_col]))
+        isempty(values) && return 0.0
+        return round(mean(values); digits=digits)
+    end
 
-    top_stars_package = ""
-    top_monthly_downloads_package = ""
-    top_total_downloads_package = ""
+    function get_median(metric_col::Symbol; digits::Int=2)
+        if !(metric_col in available)
+            return 0.0
+        end
+        values = collect(skipmissing(packages_df[!, metric_col]))
+        isempty(values) && return 0.0
+        return round(median(values); digits=digits)
+    end
 
-    if total_packages > 0 && :stars in available
-        top_stars_package = String(sort(packages_df, :stars; rev=true)[1, :package_name])
+    function count_true(col::Symbol)
+        if !(col in available)
+            return 0
+        end
+        return sum(packages_df[!, col])
     end
-    if total_packages > 0 && :monthly_downloads in available
-        top_monthly_downloads_package = String(sort(packages_df, :monthly_downloads; rev=true)[1, :package_name])
+
+    function count_status(status::String)
+        if !(:maintenance_status in available)
+            return 0
+        end
+        return sum(
+            lowercase(String(s)) == lowercase(status) for
+            s in skipmissing(packages_df.maintenance_status)
+        )
     end
-    if total_packages > 0 && :total_downloads in available
-        top_total_downloads_package = String(sort(packages_df, :total_downloads; rev=true)[1, :package_name])
+
+    function get_top(metric_col::Symbol)
+        if total_packages == 0 || !(metric_col in available)
+            return "", 0.0
+        end
+
+        ranked = sort(packages_df, metric_col; rev=true)
+        top_row = ranked[1, :]
+        raw_val = top_row[metric_col]
+        top_val = ismissing(raw_val) ? 0.0 : Float64(raw_val)
+        return String(top_row.package_name), top_val
     end
+
+    top_stars_package, top_stars_value = get_top(:stars)
+    top_monthly_downloads_package, top_monthly_downloads_value = get_top(:monthly_downloads)
+    top_human_contributors_package, top_human_contributors_value = get_top(:human_contributors_count)
+    top_active_maintainers_package, top_active_maintainers_value = get_top(:active_maintainers_count)
 
     return DataFrame(
         run_month=[run_month],
         run_timestamp=[run_ts],
         run_id=[run_id],
+
         total_packages=[total_packages],
-        stars_total=[stars_total],
-        monthly_downloads_total=[monthly_downloads_total],
-        total_downloads_total=[total_downloads_total],
-        ci_adoption_pct=[ci_adoption_pct],
-        gh_pages_adoption_pct=[gh_pages_adoption_pct],
-        active_maintainers_pct=[active_maintainers_pct],
+        in_general_registry_count=[count_true(:in_general_registry)],
+        forks_count=[count_true(:is_fork)],
+        archived_count=[count_true(:is_archived)],
+
+        has_src_dir_count=[count_true(:has_src_dir)],
+        has_test_dir_count=[count_true(:has_test_dir)],
+        has_project_toml_count=[count_true(:has_project_toml)],
+        has_license_count=[count_true(:has_license)],
+        has_docs_dir_count=[count_true(:has_docs_dir)],
+
+        has_gh_pages_count=[count_true(:has_gh_pages)],
+        has_ci_workflow_count=[count_true(:has_ci_workflow)],
+        has_code_coverage_count=[count_true(:has_code_coverage)],
+        has_active_maintainers_count=[count_true(:has_active_maintainers)],
+
+        releases_total=[get_total(:releases_count)],
+        stars_total=[get_total(:stars)],
+        monthly_downloads_total=[get_total(:monthly_downloads)],
+        total_downloads_total=[get_total(:total_downloads)],
+        open_issues_total=[get_total(:open_issues_count)],
+        closed_issues_total=[get_total(:closed_issues_count)],
+        open_prs_total=[get_total(:open_prs_count)],
+        closed_prs_total=[get_total(:closed_prs_count)],
+        human_contributors_total=[get_total(:human_contributors_count)],
+        bot_contributors_total=[get_total(:bot_contributors_count)],
+        maintainers_total=[get_total(:maintainers_count)],
+        active_maintainers_total=[get_total(:active_maintainers_count)],
+
+        readme_lines_total=[get_total(:readme_line_count)],
+        readme_lists_total=[get_total(:readme_lists_count)],
+        readme_links_total=[get_total(:readme_links_count)],
+        readme_code_blocks_total=[get_total(:readme_code_blocks_count)],
+        readme_badges_total=[get_total(:readme_badges_count)],
+        readme_sections_total=[get_total(:readme_sections_count)],
+
+        stars_avg=[get_avg(:stars)],
+        stars_median=[get_median(:stars)],
+        monthly_downloads_avg=[get_avg(:monthly_downloads)],
+        monthly_downloads_median=[get_median(:monthly_downloads)],
+        total_downloads_avg=[get_avg(:total_downloads)],
+        total_downloads_median=[get_median(:total_downloads)],
+        open_issues_avg=[get_avg(:open_issues_count)],
+        open_issues_median=[get_median(:open_issues_count)],
+        open_prs_avg=[get_avg(:open_prs_count)],
+        open_prs_median=[get_median(:open_prs_count)],
+        avg_pr_merge_days_avg=[get_avg(:avg_pr_merge_days)],
+        avg_pr_merge_days_median=[get_median(:avg_pr_merge_days)],
+        days_since_last_activity_avg=[get_avg(:days_since_last_activity)],
+        days_since_last_activity_median=[get_median(:days_since_last_activity)],
+        readme_completeness_score_avg=[get_avg(:readme_completeness_score)],
+        readme_completeness_score_median=[get_median(:readme_completeness_score)],
+
+        maintenance_active_count=[count_status("Active")],
+        maintenance_inactive_count=[count_status("Inactive")],
+        maintenance_abandoned_count=[count_status("Abandoned")],
+        maintenance_concept_count=[count_status("Concept")],
+
         top_stars_package=[top_stars_package],
+        top_stars_value=[top_stars_value],
         top_monthly_downloads_package=[top_monthly_downloads_package],
-        top_total_downloads_package=[top_total_downloads_package],
+        top_monthly_downloads_value=[top_monthly_downloads_value],
+        top_human_contributors_package=[top_human_contributors_package],
+        top_human_contributors_value=[top_human_contributors_value],
+        top_active_maintainers_package=[top_active_maintainers_package],
+        top_active_maintainers_value=[top_active_maintainers_value],
     )
 end
 
@@ -185,34 +233,36 @@ function update_temporal_csvs()
     run_ts = Dates.format(now_utc, "yyyy-mm-ddTHH:MM:SS") * "Z"
     run_id = get(ENV, "GITHUB_RUN_ID", run_ts)
 
-    current_timeseries = build_packages_timeseries(packages_df, run_month, run_ts, run_id)
     current_tops = build_monthly_tops(packages_df, run_month, run_ts, run_id)
     current_summary = build_run_summary(packages_df, run_month, run_ts, run_id)
 
-    ensure_parent_dir(PACKAGES_TIMESERIES_OUTPUT)
     ensure_parent_dir(MONTHLY_TOPS_OUTPUT)
     ensure_parent_dir(RUN_SUMMARY_OUTPUT)
 
-    existing_timeseries = load_or_empty(PACKAGES_TIMESERIES_OUTPUT, current_timeseries[1:0, :])
-    existing_tops = load_or_empty(MONTHLY_TOPS_OUTPUT, current_tops[1:0, :])
-    existing_summary = load_or_empty(RUN_SUMMARY_OUTPUT, current_summary[1:0, :])
+    existing_tops = align_schema_or_reset(
+        load_or_empty(MONTHLY_TOPS_OUTPUT, current_tops[1:0, :]),
+        current_tops,
+        MONTHLY_TOPS_OUTPUT,
+    )
+    existing_summary = align_schema_or_reset(
+        load_or_empty(RUN_SUMMARY_OUTPUT, current_summary[1:0, :]),
+        current_summary,
+        RUN_SUMMARY_OUTPUT,
+    )
 
-    updated_timeseries = vcat(existing_timeseries, current_timeseries; cols=:union)
     updated_tops = vcat(existing_tops, current_tops; cols=:union)
     updated_summary = vcat(existing_summary, current_summary; cols=:union)
 
-    sort!(updated_timeseries, [:run_timestamp, :package_name])
-    sort!(updated_tops, [:run_timestamp, :metric, :rank])
+    sort!(updated_tops, :run_timestamp)
     sort!(updated_summary, :run_timestamp)
 
-    CSV.write(PACKAGES_TIMESERIES_OUTPUT, updated_timeseries)
     CSV.write(MONTHLY_TOPS_OUTPUT, updated_tops)
     CSV.write(RUN_SUMMARY_OUTPUT, updated_summary)
 
     println("Temporal CSV update complete:")
-    println("- $PACKAGES_TIMESERIES_OUTPUT")
     println("- $MONTHLY_TOPS_OUTPUT")
     println("- $RUN_SUMMARY_OUTPUT")
 end
+
 
 update_temporal_csvs()
