@@ -12,7 +12,7 @@ TheCedarPrince,Jacob S. Zelko,19,225,Core,false,EpiJ; HealthBase.jl; HealthLLM.j
 yolhan83,yolhan mannes,1,195,Regular,false,BloodFlowTrixi.jl
 paulstey,Paul Stey,3,188,Regular,false,ARules.jl; BioMedQuery.jl; CAOS.jl
 termi-official,Dennis Ogiermann,1,138,Regular,false,Thunderbolt.jl
-kosuri-indu,Kosuri Indu,11,133,Core,false,HealthBase.jl; HealthDash.jl; JuliaHealthAudit; JuliaHealthEcosystemPaper; JuliaHealthZoo; KomaMRI.jl; OHDSIAPI.jl; OMOPCDMFeasibility.jl; OMOPCommonDataModel.jl; Thunderbolt.jl; juliahealth.github.io
+kosuri-indu,Kosuri Indu,11,134,Core,false,HealthBase.jl; HealthDash.jl; JuliaHealthAudit; JuliaHealthEcosystemPaper; JuliaHealthZoo; KomaMRI.jl; OHDSIAPI.jl; OMOPCDMFeasibility.jl; OMOPCommonDataModel.jl; Thunderbolt.jl; juliahealth.github.io
 Stockless,Stockless,1,120,Regular,false,KomaMRI.jl
 rkierulf,rkierulf,2,116,Regular,false,KomaMRI.jl; juliahealth.github.io
 notZaki,Zaki A.,1,113,Regular,false,DICOM.jl
@@ -20,7 +20,7 @@ Nosferican,José Bayoán Santiago Calderón,1,96,Occasional,false,NCEI.jl
 ParamThakkar123,Param Thakkar,4,74,Regular,false,HealthLLM.jl; HealthSampleData.jl; JuliaHealthLLM; MedEval3D.jl
 jagiellonczyk14,jagiellonczyk14,2,68,Occasional,false,MedEval3D.jl; MedEye3d.jl
 google-labs-jules[bot],google-labs-jules[bot],1,53,Occasional,true,MedImages.jl
-github-actions[bot],github-actions[bot],10,51,Regular,true,EHRAuthentication.jl; FHIRClient.jl; HealthBase.jl; ICD_GEMs.jl; IPUMS.jl; JuliaHealthAudit; KomaMRI.jl; PubChemCrawler.jl; SMARTAppLaunch.jl; SMARTBackendServices.jl
+github-actions[bot],github-actions[bot],10,52,Regular,true,EHRAuthentication.jl; FHIRClient.jl; HealthBase.jl; ICD_GEMs.jl; IPUMS.jl; JuliaHealthAudit; KomaMRI.jl; PubChemCrawler.jl; SMARTAppLaunch.jl; SMARTBackendServices.jl
 aTrotier,aTrotier,1,46,Occasional,false,KomaMRI.jl
 Jay-sanjay,Jay-sanjay,3,41,Regular,false,OMOPCDMCohortCreator.jl; OMOPCDMPathways.jl; juliahealth.github.io
 jasonk33,Jason Katz,2,34,Occasional,false,BioMedQuery.jl; CAOS.jl
