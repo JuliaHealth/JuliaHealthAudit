@@ -5,6 +5,7 @@ using DataFrames
 using Dates
 
 const AUDIT_PACKAGES_INPUT = "data/results/audit_packages.csv"
+const AUDIT_CONTRIBUTORS_INPUT = "data/results/audit_contributors.csv"
 const MONTHLY_TOPS_OUTPUT = "data/history/monthly_tops.csv"
 const RUN_SUMMARY_OUTPUT = "data/history/run_summary.csv"
 
@@ -67,6 +68,21 @@ function get_top(packages_df::DataFrame, available::Set{Symbol}, metric_col::Sym
     return String(top_row.package_name), top_val
 end
 
+function dedup_human_bot_counts(contributors_df::DataFrame)
+    if nrow(contributors_df) == 0
+        return 0, 0
+    end
+
+    contributor_cols = Set(Symbol.(names(contributors_df)))
+    if !(:is_bot in contributor_cols)
+        return 0, 0
+    end
+
+    bot_total = sum(contributors_df.is_bot)
+    human_total = nrow(contributors_df) - bot_total
+    return human_total, bot_total
+end
+
 function build_monthly_tops(
     packages_df::DataFrame,
     run_month::String,
@@ -115,12 +131,14 @@ end
 
 function build_run_summary(
     packages_df::DataFrame,
+    contributors_df::DataFrame,
     run_month::String,
     run_ts::String,
     run_id::String,
 )
     total_packages = nrow(packages_df)
     available = Set(Symbol.(names(packages_df)))
+    human_total_dedup, bot_total_dedup = dedup_human_bot_counts(contributors_df)
 
     top_stars_package, top_stars_value = get_top(packages_df, available, :stars)
     top_monthly_downloads_package, top_monthly_downloads_value = get_top(packages_df, available, :monthly_downloads)
@@ -156,10 +174,8 @@ function build_run_summary(
         closed_issues_total=[get_total(packages_df, available, :closed_issues_count)],
         open_prs_total=[get_total(packages_df, available, :open_prs_count)],
         closed_prs_total=[get_total(packages_df, available, :closed_prs_count)],
-        human_contributors_total=[get_total(packages_df, available, :human_contributors_count)],
-        bot_contributors_total=[get_total(packages_df, available, :bot_contributors_count)],
-        maintainers_total=[get_total(packages_df, available, :maintainers_count)],
-        active_maintainers_total=[get_total(packages_df, available, :active_maintainers_count)],
+        human_contributors_total=[human_total_dedup],
+        bot_contributors_total=[bot_total_dedup],
 
         maintenance_active_count=[count_status(packages_df, available, "Active")],
         maintenance_inactive_count=[count_status(packages_df, available, "Inactive")],
@@ -186,6 +202,9 @@ function update_temporal_csvs()
     isfile(AUDIT_PACKAGES_INPUT) || error("Missing input: $AUDIT_PACKAGES_INPUT")
 
     packages_df = CSV.read(AUDIT_PACKAGES_INPUT, DataFrame)
+    contributors_df = isfile(AUDIT_CONTRIBUTORS_INPUT) ?
+        CSV.read(AUDIT_CONTRIBUTORS_INPUT, DataFrame) :
+        DataFrame(login=String[], is_bot=Bool[])
 
     now_utc = now(UTC)
     run_month = Dates.format(now_utc, "yyyy-mm")
@@ -193,7 +212,7 @@ function update_temporal_csvs()
     run_id = get(ENV, "GITHUB_RUN_ID", run_ts)
 
     current_tops = build_monthly_tops(packages_df, run_month, run_ts, run_id)
-    current_summary = build_run_summary(packages_df, run_month, run_ts, run_id)
+    current_summary = build_run_summary(packages_df, contributors_df, run_month, run_ts, run_id)
 
     ensure_parent_dir(MONTHLY_TOPS_OUTPUT)
     ensure_parent_dir(RUN_SUMMARY_OUTPUT)
