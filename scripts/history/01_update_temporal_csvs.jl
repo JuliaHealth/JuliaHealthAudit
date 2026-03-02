@@ -3,7 +3,6 @@
 using CSV
 using DataFrames
 using Dates
-using Statistics
 
 const AUDIT_PACKAGES_INPUT = "data/results/audit_packages.csv"
 const MONTHLY_TOPS_OUTPUT = "data/history/monthly_tops.csv"
@@ -33,6 +32,39 @@ function align_schema_or_reset(existing::DataFrame, schema::DataFrame, label::St
 
     println("Schema changed for $label; resetting existing history for this file")
     return schema[1:0, :]
+end
+
+function get_total(packages_df::DataFrame, available::Set{Symbol}, metric_col::Symbol)
+    return metric_col in available ? sum(skipmissing(packages_df[!, metric_col])) : 0
+end
+
+function count_true(packages_df::DataFrame, available::Set{Symbol}, col::Symbol)
+    if !(col in available)
+        return 0
+    end
+    return sum(packages_df[!, col])
+end
+
+function count_status(packages_df::DataFrame, available::Set{Symbol}, status::String)
+    if !(:maintenance_status in available)
+        return 0
+    end
+    return sum(
+        lowercase(String(s)) == lowercase(status) for
+        s in skipmissing(packages_df.maintenance_status)
+    )
+end
+
+function get_top(packages_df::DataFrame, available::Set{Symbol}, metric_col::Symbol)
+    if nrow(packages_df) == 0 || !(metric_col in available)
+        return "", 0.0
+    end
+
+    ranked = sort(packages_df, metric_col; rev=true)
+    top_row = ranked[1, :]
+    raw_val = top_row[metric_col]
+    top_val = ismissing(raw_val) ? 0.0 : Float64(raw_val)
+    return String(top_row.package_name), top_val
 end
 
 function build_monthly_tops(
@@ -90,59 +122,10 @@ function build_run_summary(
     total_packages = nrow(packages_df)
     available = Set(Symbol.(names(packages_df)))
 
-    get_total(metric_col::Symbol) = metric_col in available ? sum(skipmissing(packages_df[!, metric_col])) : 0
-
-    function get_avg(metric_col::Symbol; digits::Int=2)
-        if !(metric_col in available)
-            return 0.0
-        end
-        values = collect(skipmissing(packages_df[!, metric_col]))
-        isempty(values) && return 0.0
-        return round(mean(values); digits=digits)
-    end
-
-    function get_median(metric_col::Symbol; digits::Int=2)
-        if !(metric_col in available)
-            return 0.0
-        end
-        values = collect(skipmissing(packages_df[!, metric_col]))
-        isempty(values) && return 0.0
-        return round(median(values); digits=digits)
-    end
-
-    function count_true(col::Symbol)
-        if !(col in available)
-            return 0
-        end
-        return sum(packages_df[!, col])
-    end
-
-    function count_status(status::String)
-        if !(:maintenance_status in available)
-            return 0
-        end
-        return sum(
-            lowercase(String(s)) == lowercase(status) for
-            s in skipmissing(packages_df.maintenance_status)
-        )
-    end
-
-    function get_top(metric_col::Symbol)
-        if total_packages == 0 || !(metric_col in available)
-            return "", 0.0
-        end
-
-        ranked = sort(packages_df, metric_col; rev=true)
-        top_row = ranked[1, :]
-        raw_val = top_row[metric_col]
-        top_val = ismissing(raw_val) ? 0.0 : Float64(raw_val)
-        return String(top_row.package_name), top_val
-    end
-
-    top_stars_package, top_stars_value = get_top(:stars)
-    top_monthly_downloads_package, top_monthly_downloads_value = get_top(:monthly_downloads)
-    top_human_contributors_package, top_human_contributors_value = get_top(:human_contributors_count)
-    top_active_maintainers_package, top_active_maintainers_value = get_top(:active_maintainers_count)
+    top_stars_package, top_stars_value = get_top(packages_df, available, :stars)
+    top_monthly_downloads_package, top_monthly_downloads_value = get_top(packages_df, available, :monthly_downloads)
+    top_human_contributors_package, top_human_contributors_value = get_top(packages_df, available, :human_contributors_count)
+    top_active_maintainers_package, top_active_maintainers_value = get_top(packages_df, available, :active_maintainers_count)
 
     return DataFrame(
         run_month=[run_month],
@@ -150,62 +133,38 @@ function build_run_summary(
         run_id=[run_id],
 
         total_packages=[total_packages],
-        in_general_registry_count=[count_true(:in_general_registry)],
-        forks_count=[count_true(:is_fork)],
-        archived_count=[count_true(:is_archived)],
+        in_general_registry_count=[count_true(packages_df, available, :in_general_registry)],
+        forks_count=[count_true(packages_df, available, :is_fork)],
+        archived_count=[count_true(packages_df, available, :is_archived)],
 
-        has_src_dir_count=[count_true(:has_src_dir)],
-        has_test_dir_count=[count_true(:has_test_dir)],
-        has_project_toml_count=[count_true(:has_project_toml)],
-        has_license_count=[count_true(:has_license)],
-        has_docs_dir_count=[count_true(:has_docs_dir)],
+        has_src_dir_count=[count_true(packages_df, available, :has_src_dir)],
+        has_test_dir_count=[count_true(packages_df, available, :has_test_dir)],
+        has_project_toml_count=[count_true(packages_df, available, :has_project_toml)],
+        has_license_count=[count_true(packages_df, available, :has_license)],
+        has_docs_dir_count=[count_true(packages_df, available, :has_docs_dir)],
 
-        has_gh_pages_count=[count_true(:has_gh_pages)],
-        has_ci_workflow_count=[count_true(:has_ci_workflow)],
-        has_code_coverage_count=[count_true(:has_code_coverage)],
-        has_active_maintainers_count=[count_true(:has_active_maintainers)],
+        has_gh_pages_count=[count_true(packages_df, available, :has_gh_pages)],
+        has_ci_workflow_count=[count_true(packages_df, available, :has_ci_workflow)],
+        has_code_coverage_count=[count_true(packages_df, available, :has_code_coverage)],
+        has_active_maintainers_count=[count_true(packages_df, available, :has_active_maintainers)],
 
-        releases_total=[get_total(:releases_count)],
-        stars_total=[get_total(:stars)],
-        monthly_downloads_total=[get_total(:monthly_downloads)],
-        total_downloads_total=[get_total(:total_downloads)],
-        open_issues_total=[get_total(:open_issues_count)],
-        closed_issues_total=[get_total(:closed_issues_count)],
-        open_prs_total=[get_total(:open_prs_count)],
-        closed_prs_total=[get_total(:closed_prs_count)],
-        human_contributors_total=[get_total(:human_contributors_count)],
-        bot_contributors_total=[get_total(:bot_contributors_count)],
-        maintainers_total=[get_total(:maintainers_count)],
-        active_maintainers_total=[get_total(:active_maintainers_count)],
+        releases_total=[get_total(packages_df, available, :releases_count)],
+        stars_total=[get_total(packages_df, available, :stars)],
+        monthly_downloads_total=[get_total(packages_df, available, :monthly_downloads)],
+        total_downloads_total=[get_total(packages_df, available, :total_downloads)],
+        open_issues_total=[get_total(packages_df, available, :open_issues_count)],
+        closed_issues_total=[get_total(packages_df, available, :closed_issues_count)],
+        open_prs_total=[get_total(packages_df, available, :open_prs_count)],
+        closed_prs_total=[get_total(packages_df, available, :closed_prs_count)],
+        human_contributors_total=[get_total(packages_df, available, :human_contributors_count)],
+        bot_contributors_total=[get_total(packages_df, available, :bot_contributors_count)],
+        maintainers_total=[get_total(packages_df, available, :maintainers_count)],
+        active_maintainers_total=[get_total(packages_df, available, :active_maintainers_count)],
 
-        readme_lines_total=[get_total(:readme_line_count)],
-        readme_lists_total=[get_total(:readme_lists_count)],
-        readme_links_total=[get_total(:readme_links_count)],
-        readme_code_blocks_total=[get_total(:readme_code_blocks_count)],
-        readme_badges_total=[get_total(:readme_badges_count)],
-        readme_sections_total=[get_total(:readme_sections_count)],
-
-        stars_avg=[get_avg(:stars)],
-        stars_median=[get_median(:stars)],
-        monthly_downloads_avg=[get_avg(:monthly_downloads)],
-        monthly_downloads_median=[get_median(:monthly_downloads)],
-        total_downloads_avg=[get_avg(:total_downloads)],
-        total_downloads_median=[get_median(:total_downloads)],
-        open_issues_avg=[get_avg(:open_issues_count)],
-        open_issues_median=[get_median(:open_issues_count)],
-        open_prs_avg=[get_avg(:open_prs_count)],
-        open_prs_median=[get_median(:open_prs_count)],
-        avg_pr_merge_days_avg=[get_avg(:avg_pr_merge_days)],
-        avg_pr_merge_days_median=[get_median(:avg_pr_merge_days)],
-        days_since_last_activity_avg=[get_avg(:days_since_last_activity)],
-        days_since_last_activity_median=[get_median(:days_since_last_activity)],
-        readme_completeness_score_avg=[get_avg(:readme_completeness_score)],
-        readme_completeness_score_median=[get_median(:readme_completeness_score)],
-
-        maintenance_active_count=[count_status("Active")],
-        maintenance_inactive_count=[count_status("Inactive")],
-        maintenance_abandoned_count=[count_status("Abandoned")],
-        maintenance_concept_count=[count_status("Concept")],
+        maintenance_active_count=[count_status(packages_df, available, "Active")],
+        maintenance_inactive_count=[count_status(packages_df, available, "Inactive")],
+        maintenance_abandoned_count=[count_status(packages_df, available, "Abandoned")],
+        maintenance_concept_count=[count_status(packages_df, available, "Concept")],
 
         top_stars_package=[top_stars_package],
         top_stars_value=[top_stars_value],
@@ -263,6 +222,5 @@ function update_temporal_csvs()
     println("- $MONTHLY_TOPS_OUTPUT")
     println("- $RUN_SUMMARY_OUTPUT")
 end
-
 
 update_temporal_csvs()
