@@ -8,23 +8,18 @@ on:
 jobs:
   audit:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Julia
-        uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@v2
         with:
           version: "1.11"
 
-      - name: Cache Julia packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.julia
-          key: ${{ runner.os }}-julia-${{ hashFiles('**/Project.toml') }}
+      - uses: julia-actions/cache@v2
 
       - name: Install dependencies
         run: julia --project=. -e 'using Pkg; Pkg.instantiate()'
@@ -35,20 +30,56 @@ jobs:
       - name: Run audit pipeline
         run: julia --project=. scripts/main.jl
 
-      - name: Commit and push results
+      - name: Verify audit outputs
         run: |
-          # Configure git identity
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          set -e
 
-          # Stage audit output files
+          # verify core audit outputs exist
+          if [ ! -f data/results/packages.csv ]; then
+            echo "Missing packages.csv — aborting"
+            exit 1
+          fi
+
+          if [ ! -d data/visualizations ]; then
+            echo "Missing visualizations directory — aborting"
+            exit 1
+          fi
+
+      - name: Stage audit results
+        run: |
           git add data/results/*.csv
           git add data/visualizations/*.png
           git add data/results/lists/* || true
           git add data/history/*.csv || true
 
-          # Commit and push only if there are changes
-          if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "update audit results"
-            git push
+      - name: Detect changes
+        id: changes
+        run: |
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Commit audit results
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git commit -m "update audit results"
+          git push
+
+      - name: Notify website repo
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/JuliaHealth/juliahealth.github.io/dispatches \
+            -d '{
+                  "event_type": "audit-data-updated",
+                  "client_payload": {
+                    "target_branch": "add/ecosystem-health-section"
+                  }
+                }'
