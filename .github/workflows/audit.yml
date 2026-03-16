@@ -14,12 +14,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: julia-actions/setup-julia@v2
         with:
           version: "1.11"
 
       - uses: julia-actions/cache@v2
+        with:
+          cache-name: julia-health-audit
 
       - name: Install dependencies
         run: julia --project=. -e 'using Pkg; Pkg.instantiate()'
@@ -34,7 +38,6 @@ jobs:
         run: |
           set -e
 
-          # verify core audit outputs exist
           if [ ! -f data/results/packages.csv ]; then
             echo "Missing packages.csv — aborting"
             exit 1
@@ -73,10 +76,12 @@ jobs:
       - name: Notify website repo
         if: steps.changes.outputs.changed == 'true'
         run: |
+          set -e
+
           curl -X POST \
             -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/JuliaHealth/juliahealth.github.io/dispatches \
+            https://api.github.com/repos/kosuri-indu/juliahealth.github.io/dispatches \
             -d '{
                   "event_type": "audit-data-updated",
                   "client_payload": {
