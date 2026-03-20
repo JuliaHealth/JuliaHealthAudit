@@ -74,10 +74,9 @@ jobs:
           git push
 
       - name: Notify website repo
-        if: steps.changes.outputs.changed == 'true'
         run: |
           set -e
-
+      
           curl -X POST \
             -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
