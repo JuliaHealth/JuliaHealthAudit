@@ -83,5 +83,8 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/JuliaHealth/juliahealth.github.io/dispatches \
             -d '{
-                  "event_type": "audit-data-updated"
+                  "event_type": "audit-data-updated",
+                  "client_payload": {
+                    "target_branch": "add/ecosystem-health-section"
+                  }
                 }'
