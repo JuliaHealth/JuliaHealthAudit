@@ -22,15 +22,15 @@ HealthLLM.jl,ParamThakkar123; TheCedarPrince
 HealthMLBase.jl,DilumAluthge
 HealthSampleData.jl,ParamThakkar123
 ICD_GEMs.jl,InterdisciplinaryPhysicsTeam; pitmonticone
-IPUMS.jl,TheCedarPrince
+IPUMS.jl,00krishna; TheCedarPrince
 ITKIOWrapp.jl,divital-coder; jakubMitura14
 ITKIOWrapper.jl,divital-coder; jakubMitura14
 KomaMRI.jl,KookiesNKareem; cncastillo; kosuri-indu; pvillacorta
-MTIWrapper.jl,DilumAluthge; mirestrepo
+MTIWrapper.jl,DilumAluthge
 MedEval3D.jl,ParamThakkar123; jakubMitura14; rupalimits
 MedEye3d.jl,divital-coder; jakubMitura14
-MedImages.jl,Muskan121622; divital-coder; jakubMitura14
-MedPipe3D.jl,KushalTrivedi19032005; MarijaGijic; jakubMitura14
+MedImages.jl,Muskan121622; jakubMitura14
+MedPipe3D.jl,Esraa-Hassan0; KushalTrivedi19032005; MarijaGijic; Muskan121622; jakubMitura14
 NCEI.jl,Nosferican
 NeuroAnalyzer.jl,AdamWysokinski
 OHDSIAPI.jl,TheCedarPrince; kosuri-indu
@@ -42,10 +42,10 @@ OMOPCommonDataModel.jl,kosuri-indu
 OMOPVocabMapper.jl,Mounika-Thakkallapally; invalid-email-address
 PharmaceuticalClassification.jl,DilumAluthge
 PubChemCrawler.jl,timholy; tp2750
-PubMedMiner.jl,DilumAluthge; ibacher; mcmcgrath13
+PubMedMiner.jl,DilumAluthge; ibacher
 SMARTAppLaunch.jl,DilumAluthge; devmotion
 SMARTBackendServices.jl,devmotion
-Thunderbolt.jl,AbdAlazezAhmed; Abdelrahman912; kosuri-indu; kylebeggs; oscardssmith; termi-official
+Thunderbolt.jl,AbdAlazezAhmed; Abdelrahman912; kosuri-indu; oscardssmith; termi-official
 WrapperITKIO.jl,jakubMitura14
 EpiJ,TheCedarPrince
 JuliaHealthAudit,kosuri-indu

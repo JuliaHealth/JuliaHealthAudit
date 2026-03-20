@@ -22,26 +22,26 @@ HealthLLM.jl,ParamThakkar123; TheCedarPrince
 HealthMLBase.jl,
 HealthSampleData.jl,ParamThakkar123
 ICD_GEMs.jl,
-IPUMS.jl,
+IPUMS.jl,00krishna; TheCedarPrince
 ITKIOWrapp.jl,
 ITKIOWrapper.jl,
 KomaMRI.jl,KookiesNKareem; cncastillo; kosuri-indu; pvillacorta
 MTIWrapper.jl,
 MedEval3D.jl,
 MedEye3d.jl,
-MedImages.jl,Muskan121622; divital-coder; jakubMitura14
-MedPipe3D.jl,KushalTrivedi19032005; jakubMitura14
+MedImages.jl,Muskan121622; jakubMitura14
+MedPipe3D.jl,Esraa-Hassan0; KushalTrivedi19032005; Muskan121622; jakubMitura14
 NCEI.jl,
 NeuroAnalyzer.jl,AdamWysokinski
 OHDSIAPI.jl,
 OMOPCDMCohortCreator.jl,
 OMOPCDMDatabaseConnector.jl,
-OMOPCDMFeasibility.jl,TheCedarPrince; kosuri-indu
+OMOPCDMFeasibility.jl,kosuri-indu
 OMOPCDMPathways.jl,
 OMOPCommonDataModel.jl,kosuri-indu
 OMOPVocabMapper.jl,
 PharmaceuticalClassification.jl,
-PubChemCrawler.jl,timholy; tp2750
+PubChemCrawler.jl,
 PubMedMiner.jl,
 SMARTAppLaunch.jl,
 SMARTBackendServices.jl,
@@ -57,5 +57,5 @@ MedPipe3DTutorial,
 OMOPCDMMetrics,
 OMOPCDMPredictor,
 ObservationalHealthSubecosystemPaper,
-juliahealth.github.io,Hetarth02; divital-coder; kosuri-indu
+juliahealth.github.io,Hetarth02; divital-coder
 juliahealth.github.io-previews,
