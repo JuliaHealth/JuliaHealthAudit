@@ -20,7 +20,7 @@ Nosferican,José Bayoán Santiago Calderón,1,96,Occasional,false,NCEI.jl
 ParamThakkar123,Param Thakkar,4,74,Regular,false,HealthLLM.jl; HealthSampleData.jl; JuliaHealthLLM; MedEval3D.jl
 jagiellonczyk14,jagiellonczyk14,2,68,Occasional,false,MedEval3D.jl; MedEye3d.jl
 google-labs-jules[bot],google-labs-jules[bot],1,66,Occasional,true,MedImages.jl
-github-actions[bot],github-actions[bot],10,53,Regular,true,EHRAuthentication.jl; FHIRClient.jl; HealthBase.jl; ICD_GEMs.jl; IPUMS.jl; JuliaHealthAudit; KomaMRI.jl; PubChemCrawler.jl; SMARTAppLaunch.jl; SMARTBackendServices.jl
+github-actions[bot],github-actions[bot],10,54,Regular,true,EHRAuthentication.jl; FHIRClient.jl; HealthBase.jl; ICD_GEMs.jl; IPUMS.jl; JuliaHealthAudit; KomaMRI.jl; PubChemCrawler.jl; SMARTAppLaunch.jl; SMARTBackendServices.jl
 aTrotier,aTrotier,1,46,Occasional,false,KomaMRI.jl
 Jay-sanjay,Jay-sanjay,3,41,Regular,false,OMOPCDMCohortCreator.jl; OMOPCDMPathways.jl; juliahealth.github.io
 dependabot[bot],dependabot[bot],7,34,Regular,true,BloodFlowTrixi.jl; FHIRClient.jl; IPUMS.jl; KomaMRI.jl; OMOPCDMPathways.jl; SMARTBackendServices.jl; Thunderbolt.jl
