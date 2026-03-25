@@ -80,10 +80,10 @@ jobs:
           curl -X POST \
             -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/JuliaHealth/juliahealth.github.io/dispatches \
+            https://api.github.com/repos/JuliaHealth/juliahealth.github.io/actions/workflows/sync-audit-data.yml/dispatches \
             -d '{
-                  "event_type": "audit-data-updated",
-                  "client_payload": {
+                  "ref": "add/ecosystem-health-section",
+                  "inputs": {
                     "target_branch": "add/ecosystem-health-section"
                   }
                 }'
