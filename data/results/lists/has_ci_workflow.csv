@@ -9,8 +9,8 @@ DICOM.jl,JuliaHealthEcosystemPaper
 DICOMClient.jl,MedPipe3DTutorial
 DICOMTree.jl,OMOPCDMPredictor
 DateShifting.jl,ObservationalHealthSubecosystemPaper
-DiagnosisClassification.jl,juliahealth.github.io
-EHRAuthentication.jl,juliahealth.github.io-previews
+DiagnosisClassification.jl,juliahealth.github.io-previews
+EHRAuthentication.jl,
 FHIRClient.jl,
 FHIRClientJSON.jl,
 FHIRClientXML.jl,
@@ -47,3 +47,4 @@ JuliaHealthLLM,
 JuliaHealthWebsiteOld,
 JuliaHealthZoo,
 OMOPCDMMetrics,
+juliahealth.github.io,

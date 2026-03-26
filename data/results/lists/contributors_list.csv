@@ -22,7 +22,7 @@ HealthLLM.jl,ParamThakkar123; TheCedarPrince
 HealthMLBase.jl,DilumAluthge
 HealthSampleData.jl,TheCedarPrince; ParamThakkar123
 ICD_GEMs.jl,InterdisciplinaryPhysicsTeam; pitmonticone
-IPUMS.jl,TheCedarPrince; 00krishna
+IPUMS.jl,TheCedarPrince; 00krishna; riteshbhirud
 ITKIOWrapp.jl,jakubMitura14; divital-coder
 ITKIOWrapper.jl,divital-coder; jakubMitura14
 KomaMRI.jl,cncastillo; pvillacorta; beorostica; Stockless; rkierulf; aTrotier; gsahonero; curtcorum; tinorodriguez; DilumAluthge; KookiesNKareem; kosuri-indu; TheCedarPrince; nHackel; pabloirarrazaval; thePlasm; calberolalopez; gabuzi
@@ -57,5 +57,5 @@ MedPipe3DTutorial,jakubMitura14
 OMOPCDMMetrics,TheCedarPrince
 OMOPCDMPredictor,TheCedarPrince
 ObservationalHealthSubecosystemPaper,TheCedarPrince
-juliahealth.github.io,divital-coder; TheCedarPrince; Hetarth02; kosuri-indu; Jay-sanjay; JanZubik; 00krishna; MichelaRocchetti; Mounika-Thakkallapally; rkierulf
+juliahealth.github.io,divital-coder; TheCedarPrince; kosuri-indu; Hetarth02; Jay-sanjay; JanZubik; 00krishna; MichelaRocchetti; Mounika-Thakkallapally; rkierulf
 juliahealth.github.io-previews,DilumAluthge

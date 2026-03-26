@@ -1,4 +1,4 @@
 package_name,org_repo_url,registry_repo_url
 MedEval3D,https://github.com/JuliaHealth/MedEval3D.jl,https://github.com/jakubMitura14/MedEval3D.jl.git
 MedPipe3D,https://github.com/JuliaHealth/MedPipe3D.jl,https://github.com/jakubMitura14/MedPipe3D.jl.git
-NeuroAnalyzer,https://github.com/JuliaHealth/NeuroAnalyzer.jl,https://codeberg.org/AdamWysokinski/NeuroAnalyzer.jl
+NeuroAnalyzer,https://github.com/JuliaHealth/NeuroAnalyzer.jl,https://codeberg.org/AdamWysokinski/NeuroAnalyzer.jl.git

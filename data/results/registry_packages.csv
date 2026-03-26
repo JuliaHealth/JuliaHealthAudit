@@ -23,7 +23,7 @@ MedEval3D,M/MedEval3D,https://github.com/jakubMitura14/MedEval3D.jl.git,false
 MedEye3d,M/MedEye3d,https://github.com/JuliaHealth/MedEye3d.jl.git,true
 MedImages,M/MedImages,https://github.com/JuliaHealth/MedImages.jl.git,true
 MedPipe3D,M/MedPipe3D,https://github.com/jakubMitura14/MedPipe3D.jl.git,false
-NeuroAnalyzer,N/NeuroAnalyzer,https://codeberg.org/AdamWysokinski/NeuroAnalyzer.jl,false
+NeuroAnalyzer,N/NeuroAnalyzer,https://codeberg.org/AdamWysokinski/NeuroAnalyzer.jl.git,false
 OMOPCDMCohortCreator,O/OMOPCDMCohortCreator,https://github.com/JuliaHealth/OMOPCDMCohortCreator.jl.git,true
 OMOPCDMDatabaseConnector,O/OMOPCDMDatabaseConnector,https://github.com/JuliaHealth/OMOPCDMDatabaseConnector.jl.git,true
 OMOPCommonDataModel,O/OMOPCommonDataModel,https://github.com/JuliaHealth/OMOPCommonDataModel.jl.git,true

@@ -22,7 +22,7 @@ HealthLLM.jl,ParamThakkar123; TheCedarPrince
 HealthMLBase.jl,
 HealthSampleData.jl,ParamThakkar123
 ICD_GEMs.jl,
-IPUMS.jl,00krishna; TheCedarPrince
+IPUMS.jl,00krishna; TheCedarPrince; riteshbhirud
 ITKIOWrapp.jl,
 ITKIOWrapper.jl,
 KomaMRI.jl,KookiesNKareem; cncastillo; kosuri-indu; pvillacorta
@@ -57,5 +57,5 @@ MedPipe3DTutorial,
 OMOPCDMMetrics,
 OMOPCDMPredictor,
 ObservationalHealthSubecosystemPaper,
-juliahealth.github.io,Hetarth02; divital-coder
+juliahealth.github.io,Hetarth02; divital-coder; kosuri-indu
 juliahealth.github.io-previews,
