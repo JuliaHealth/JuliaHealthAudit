@@ -37,23 +37,38 @@ jobs:
       - name: Verify audit outputs
         run: |
           set -e
-
-          if [ ! -f data/results/packages.csv ]; then
-            echo "Missing packages.csv — aborting"
+      
+          if [ ! -f data/results/audit_packages.csv ]; then
+            echo "Missing audit_packages.csv — aborting"
             exit 1
           fi
-
+      
+          if [ ! -f data/results/audit_non_packages.csv ]; then
+            echo "Missing audit_non_packages.csv — aborting"
+            exit 1
+          fi
+      
+          if [ ! -f data/results/audit_contributors.csv ]; then
+            echo "Missing audit_contributors.csv — aborting"
+            exit 1
+          fi
+      
           if [ ! -d data/visualizations ]; then
             echo "Missing visualizations directory — aborting"
             exit 1
           fi
-
+      
+          if [ ! -d data/history ]; then
+            echo "Missing history directory — aborting"
+            exit 1
+          fi
       - name: Stage audit results
         run: |
-          git add data/results/*.csv
-          git add data/visualizations/*.png
-          git add data/results/lists/* || true
-          git add data/history/*.csv || true
+          git add data/results/audit_packages.csv
+          git add data/results/audit_non_packages.csv
+          git add data/results/audit_contributors.csv
+          git add -A data/visualizations
+          git add -A data/history
 
       - name: Detect changes
         id: changes
@@ -74,16 +89,16 @@ jobs:
           git push
 
       - name: Notify website repo
+        if: steps.changes.outputs.changed == 'true'
         run: |
           set -e
-      
-          curl -X POST \
+          curl -sS -f -X POST \
             -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/JuliaHealth/juliahealth.github.io/actions/workflows/sync-audit-data.yml/dispatches \
+            https://api.github.com/repos/JuliaHealth/juliahealth.github.io/dispatches \
             -d '{
-                  "ref": "add/ecosystem-health-section",
-                  "inputs": {
-                    "target_branch": "add/ecosystem-health-section"
+                  "event_type": "audit-data-updated",
+                  "client_payload": {
+                    "target_branch": "main"
                   }
                 }'
