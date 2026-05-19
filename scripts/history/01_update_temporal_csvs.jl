@@ -207,7 +207,7 @@ function update_temporal_csvs()
         DataFrame(login=String[], is_bot=Bool[])
 
     now_utc = now(UTC)
-    run_month = Dates.format(now_utc, "yyyy-mm")
+    run_month = Dates.format(now_utc, "yyyy-mm-dd")
     run_ts = Dates.format(now_utc, "yyyy-mm-ddTHH:MM:SS") * "Z"
     run_id = get(ENV, "GITHUB_RUN_ID", run_ts)
 
