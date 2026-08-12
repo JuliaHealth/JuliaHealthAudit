@@ -1,3 +1,5 @@
+(UPDATE IN PROGRESS -- TO MAKE IT WORKABLE FOR ALL TYPES OF GENERIC ORGS AND ALSO MAINTAINING FOR JULIA ORGS AS WELL)
+
 # JuliaHealth Ecosystem Audit
 
 **Project**: Improving JuliaHealth Documentation Accessibility for Community Onboarding  
