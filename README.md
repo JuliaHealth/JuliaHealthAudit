@@ -1,13 +1,14 @@
-(UPDATE IN PROGRESS -- TO MAKE IT WORKABLE FOR ALL TYPES OF GENERIC ORGS AND ALSO MAINTAINING FOR JULIA ORGS AS WELL)
-
 # JuliaHealth Ecosystem Audit
 
-**Project**: Improving JuliaHealth Documentation Accessibility for Community Onboarding  
+**Project**: Reproducible GitHub audit pipeline for JuliaHealth and other Julia organizations  
 **Prepared by**: [@kosuri-indu](https://github.com/kosuri-indu)
 
 ## What This Is
 
-A fully automated, reproducible audit of the **JuliaHealth ecosystem** that analyzes repositories across metrics including documentation, CI/testing, code coverage, code structure, project maturity, activity metrics and code quality. **Use case**: Identify ecosystem strengths/weaknesses, guide community contributions, and support grant-funded improvements.
+A fully automated, reproducible audit of a **target Julia GitHub organization** that analyzes repositories across metrics including documentation, CI/testing, code coverage, code structure, project maturity, activity metrics and code quality. **Use case**: Identify ecosystem strengths/weaknesses, guide community contributions, and support grant-funded improvements.
+
+The target organization is configured in `audit_config.toml` via `target_org`.
+By default it is set to `JuliaHealth`, and changing that value personalizes the full audit run for any org.
 
 ## Run the Audit
 
@@ -16,7 +17,7 @@ A fully automated, reproducible audit of the **JuliaHealth ecosystem** that anal
 The audit runs automatically via **GitHub Actions** with a manual trigger:
 
 1. Go to the **Actions** tab in the GitHub repository
-2. Select the **"JuliaHealth Audit"** workflow
+2. Select the **"JuliaHealth Ecosystem Audit"** workflow
 3. Click **"Run workflow"** button
 4. Select your branch (default: `main`)
 5. Click **"Run workflow"**
@@ -39,7 +40,13 @@ For developers running the audit on their machine:
    julia --project=. -e 'using Pkg; Pkg.instantiate()'
    ```
 
-2. **Add GitHub API token** to `.env`:
+2. **Set your target organization** in `audit_config.toml`:
+
+   ```toml
+   target_org = "JuliaHealth"
+   ```
+
+3. **Add GitHub token** in `.env` (or export `GITHUB_TOKEN` in your shell):
 
    ```
    GITHUB_TOKEN=github_pat_11A4J...
@@ -47,14 +54,14 @@ For developers running the audit on their machine:
 
    Get one at [github.com/settings/tokens](https://github.com/settings/tokens)
 
-3. **Run audit**:
+4. **Run audit**:
    ```bash
    julia --project=. scripts/main.jl
    ```
 
 ## What Gets Audited
 
-The audit evaluates each JuliaHealth repository across these categories:
+The audit evaluates each repository in the configured target organization across these categories:
 
 - **Documentation & README**: Docs presence/quality, Documenter.jl usage, gh-pages, README completeness, CONTRIBUTING.md, CODE_OF_CONDUCT
 - **CI/CD, Testing & Coverage**: GitHub Actions workflows, CI status/adoption, coverage configs/mentions
@@ -86,8 +93,8 @@ scripts/
 
 data/
   ├── results/
-  │   ├── lists/ 
-  │       └── *.txt                    
+   │   ├── lists/ 
+   │       └── *.csv                    
   │   ├── packages.csv                
   │   ├── non_packages.csv            
   │   ├── registry_packages.csv   
@@ -102,6 +109,8 @@ data/
 ## Results
 
 Browse all charts in [RESULTS.md](RESULTS.md). They are grouped by Packages, Non-Packages and Contributors.
+
+Note: the committed `data/results/*.csv`, `data/visualizations/*.png`, and `RESULTS.md` in this repository are snapshots from a JuliaHealth run. Re-run the pipeline after updating `audit_config.toml` to generate org-specific outputs.
 
 ## Acknowledgments
 

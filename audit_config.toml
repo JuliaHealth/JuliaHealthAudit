@@ -1,0 +1,4 @@
+# Repository-level configuration for the audit pipeline.
+# Change target_org to run this audit for a different GitHub organization.
+
+target_org = "JuliaHealth"

@@ -116,7 +116,7 @@
 | ----------------------- | ------- | ------------------------------------------- |
 | login                   | String  | GitHub username                             |
 | name                    | String  | Display name (if available)                 |
-| num_repos_contributed   | Integer | Number of JuliaHealth repos contributed to  |
+| num_repos_contributed   | Integer | Number of target-organization repos contributed to  |
 | total_contributions     | Integer | Total contributions across those repos      |
 | repos_list              | String  | Semicolon-separated list of repos           |
 | profile_url             | String  | GitHub profile URL                          |

@@ -7,16 +7,14 @@ using DataFrames
 
 include("../utils.jl")
 
-const GITHUB_API = "https://api.github.com"
-const JULIAHEALTH_ORG = "JuliaHealth"
 const OUTPUT_PACKAGES = "data/results/packages.csv"
 const OUTPUT_NONPACKAGES = "data/results/non_packages.csv"
 
-function discover_juliahealth_repos()
-    println("Discovering JuliaHealth organization repositories")
+function discover_org_repos(org::String)
+    println("Discovering organization repositories for: $org")
 
     headers = [
-        "User-Agent" => "JuliaHealth-Audit", "Authorization" => "token $GITHUB_TOKEN"
+        "User-Agent" => GITHUB_USER_AGENT, "Authorization" => "token $GITHUB_TOKEN"
     ]
 
     repos = DataFrame(; name=String[], html_url=String[])
@@ -25,7 +23,7 @@ function discover_juliahealth_repos()
     per_page = 100
 
     while true
-        url = "$GITHUB_API/orgs/$JULIAHEALTH_ORG/repos?per_page=$per_page&page=$page"
+        url = "$GITHUB_API/orgs/$org/repos?per_page=$per_page&page=$page"
         try
             response = HTTP.get(url, headers)
             data = JSON3.read(response.body)
@@ -41,7 +39,7 @@ function discover_juliahealth_repos()
         end
     end
 
-    println("Discovered $(nrow(repos)) repositories in $JULIAHEALTH_ORG organization\n")
+    println("Discovered $(nrow(repos)) repositories in $org\n")
     return repos
 end
 
@@ -49,7 +47,7 @@ function is_package(name::String)
     endswith(name, ".jl")
 end
 
-org_repos = discover_juliahealth_repos()
+org_repos = discover_org_repos(TARGET_ORG)
 
 packages_df = DataFrame(; package_name=String[], github_repo_url=String[])
 

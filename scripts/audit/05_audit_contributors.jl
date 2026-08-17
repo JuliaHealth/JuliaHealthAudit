@@ -5,7 +5,7 @@ using DataFrames
 
 include("../utils.jl")
 
-const ORG = "juliahealth"
+const ORG = TARGET_ORG
 const CONTRIBUTORS_OUTPUT = "data/results/audit_contributors.csv"
 
 println("Fetching repositories for org: $ORG")

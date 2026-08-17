@@ -26,17 +26,23 @@ function fetch_package_toml(pkg_path::String)
     return ("", false)
 end
 
-function is_juliahealth_url(url::String)
-    occursin(r"github\.com/juliahealth/"i, url)
+function is_target_org_repo_url(url::String, target_org::String)
+    try
+        owner, _ = parse_repo_url(url)
+        return lowercase(owner) == lowercase(target_org)
+    catch
+        return false
+    end
 end
 
 org_repos_file = "data/results/packages.csv"
 org_repos = CSV.read(org_repos_file, DataFrame)
 
 strip_jl(name) = replace(String(name), r"\.jl$" => "")
-juliahealth_packages = Set(strip_jl(pkg) for pkg in org_repos.package_name)
+org_package_urls = Dict(strip_jl(row.package_name) => String(row.github_repo_url) for row in eachrow(org_repos))
+org_packages = Set(keys(org_package_urls))
 
-println("Discovering JuliaHealth packages in General Registry")
+println("Discovering $TARGET_ORG packages in General Registry")
 println("Loading Registry.toml...")
 
 registry_url = "$REGISTRY_BASE_URL/Registry.toml"
@@ -54,16 +60,16 @@ registry_packages = DataFrame(;
     package_name=String[],
     registry_path=String[],
     registry_repo_url=String[],
-    url_matches_juliahealth=Bool[],
+    url_matches_org=Bool[],
 )
 
 mismatch_packages = DataFrame(;
     package_name=String[], org_repo_url=String[], registry_repo_url=String[]
 )
 
-println("\nChecking JuliaHealth packages in General Registry")
+println("\nChecking $TARGET_ORG packages in General Registry")
 
-for package_name in juliahealth_packages
+for package_name in org_packages
     if !haskey(pkg_paths, package_name)
         continue
     end
@@ -72,23 +78,24 @@ for package_name in juliahealth_packages
     repo_url, fetch_success = fetch_package_toml(registry_path)
 
     if fetch_success
-        is_juliahealth_org = is_juliahealth_url(repo_url)
-        
-        owner, repo = parse_repo_url("https://github.com/JuliaHealth/$package_name.jl")
+        org_repo_url = get(org_package_urls, package_name, "")
+        isempty(org_repo_url) && continue
+
+        is_target_org = is_target_org_repo_url(repo_url, TARGET_ORG)
+
+        owner, repo = parse_repo_url(org_repo_url)
         repo_info = get_repo_info(owner, repo)
         
         if !isnothing(repo_info) && repo_info.is_fork
             continue
         end
         
-        push!(
-            registry_packages, (package_name, registry_path, repo_url, is_juliahealth_org)
-        )
+        push!(registry_packages, (package_name, registry_path, repo_url, is_target_org))
 
-        if !is_juliahealth_org
+        if !is_target_org
             push!(
                 mismatch_packages,
-                (package_name, "https://github.com/JuliaHealth/$package_name.jl", repo_url),
+                (package_name, org_repo_url, repo_url),
             )
         end
     end
@@ -102,6 +109,6 @@ CSV.write(REGISTRY_PACKAGES_OUTPUT, registry_packages)
 CSV.write(MISMATCH_PACKAGES_OUTPUT, mismatch_packages)
 
 println("\nRegistry discovery complete:")
-println("Found $(nrow(registry_packages)) JuliaHealth packages in registry")
-println("Mismatches Found in $(nrow(mismatch_packages)) JuliaHealth packages in registry")
+println("Found $(nrow(registry_packages)) $TARGET_ORG packages in registry")
+println("Mismatches Found in $(nrow(mismatch_packages)) $TARGET_ORG packages in registry")
 println("Saved to: $REGISTRY_PACKAGES_OUTPUT")

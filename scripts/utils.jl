@@ -15,13 +15,43 @@ const GITHUB_API = "https://api.github.com"
 Load GITHUB_TOKEN from .env file.
 """
 function load_env_vars()
-    DotEnv.load!()
-    token = get(ENV, "GITHUB_TOKEN", "")
-    token == "" && error("GITHUB_TOKEN not set in .env file")
+    try
+        DotEnv.load!()
+    catch
+    end
+
+    token = strip(get(ENV, "GITHUB_TOKEN", ""))
+    token == "" && error("GITHUB_TOKEN not set (set it in .env or environment)")
     return token
 end
 
+"""
+    load_target_org()
+
+Load target GitHub organization from repository config.
+Defaults to JuliaHealth for backward compatibility.
+"""
+function load_target_org()
+    config_path = normpath(joinpath(@__DIR__, "..", "audit_config.toml"))
+
+    if isfile(config_path)
+        try
+            cfg = TOML.parsefile(config_path)
+            config_org = strip(get(cfg, "target_org", ""))
+            if !isempty(config_org)
+                return config_org
+            end
+        catch
+        end
+    end
+
+    org = "JuliaHealth"
+    return org
+end
+
 const GITHUB_TOKEN = load_env_vars()
+const TARGET_ORG = load_target_org()
+const GITHUB_USER_AGENT = "$(TARGET_ORG)-Audit"
 
 """
     parse_repo_url(url)
@@ -43,7 +73,7 @@ Make authenticated API request to GitHub.
 """
 function github_request(endpoint)
     headers = [
-        "User-Agent" => "JuliaHealth-Audit", "Authorization" => "token $GITHUB_TOKEN"
+        "User-Agent" => GITHUB_USER_AGENT, "Authorization" => "token $GITHUB_TOKEN"
     ]
     try
         response = HTTP.get("$GITHUB_API$endpoint", headers)

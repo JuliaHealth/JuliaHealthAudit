@@ -3,10 +3,11 @@
 include("utils.jl")
 
 function main()
-    println("\nJuliaHealth Package Audit Pipeline\n")
+    println("\n$TARGET_ORG Ecosystem Audit Pipeline\n")
 
-    token = load_env_vars()
-    println("GitHub token loaded from .env\n")
+    load_env_vars()
+    println("Target organization: $TARGET_ORG")
+    println("GitHub token loaded\n")
 
     println("\nPhase 1: Separation of Packages")
     include("audit/01_separate_packages.jl")
@@ -38,10 +39,10 @@ function main()
     println("  - data/results/audit_non_packages.csv")
     println("  - data/results/registry_packages.csv")
     println("  - data/results/registry_mismatches.csv")
-    println("  - data/results/contributors_summary.csv")
+    println("  - data/results/audit_contributors.csv")
     println("  - data/visualizations/*.png")
     println("  - data/history/*.csv")
-    println("  - data/results/lists/*.txt")
+    println("  - data/results/lists/*.csv")
     println("  - RESULTS.md (comprehensive report)")
 end
 
