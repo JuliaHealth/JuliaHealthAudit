@@ -39,7 +39,7 @@ function load_target_org()
             cfg = TOML.parsefile(config_path)
             config_org = strip(get(cfg, "target_org", ""))
             if !isempty(config_org)
-                return config_org
+                return String(config_org)
             end
         catch
         end
